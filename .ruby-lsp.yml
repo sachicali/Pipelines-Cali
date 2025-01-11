@@ -1,0 +1,23 @@
+---
+formatter:
+  format_on_save: true
+  rubocop:
+    command: "bundle exec rubocop"
+    auto_correct: true
+    auto_correct_all: false
+
+diagnostics:
+  rubocop:
+    command: "bundle exec rubocop"
+    except: []
+    only: []
+    format_on_save: true
+
+completion:
+  solargraph:
+    enabled: true
+    formatting: true
+
+hover:
+  documentation: true
+  show_source: true 

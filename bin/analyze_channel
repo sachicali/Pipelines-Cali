@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'pipeline'
+require 'terminal-table'
+require 'colorize'
+
+# Configure Pipeline
+Pipeline.configure do |config|
+  config.youtube_api_key = ENV['YOUTUBE_API_KEY']
+end
+
+# Get channel ID from command line or use default
+channel_id = ARGV[0] || 'UCX6OQ3DkcsbYNE6H8uQQuVA' # Default to MrBeast's channel
+
+puts "🚀 Analyzing channel: #{channel_id}...".green
+
+begin
+  # Initialize analytics
+  analytics = Pipeline::YouTubeAnalytics.new(Pipeline.configuration.youtube_api_key)
+  analyzer = Pipeline::ChannelAnalyzer.new(channel_id, analytics.service)
+  
+  # Get analysis results
+  results = analyzer.analyze
+  
+  # Create visualizations
+  visualizer = Pipeline::DataVisualizer.new(analyzer)
+  dashboard = visualizer.generate_dashboard
+  
+  # Generate recommendations
+  recommendations = Pipeline::RecommendationsEngine.new(analyzer).generate_recommendations
+
+  # Display results in terminal
+  puts "\n📊 Performance Metrics:".yellow
+  metrics_table = Terminal::Table.new do |t|
+    t.title = "Channel Statistics"
+    t.headings = ['Metric', 'Value']
+    t.rows = results[:performance_metrics].map { |k, v| [k.to_s.capitalize, v] }
+  end
+  puts metrics_table
+
+  puts "\n📈 Top Performing Videos:".yellow
+  videos_table = Terminal::Table.new do |t|
+    t.title = "Top Videos"
+    t.headings = ['Title', 'Views', 'VPH', 'Engagement']
+    t.rows = results[:performance_metrics][:top_videos].map do |video|
+      [video[:title], video[:views], video[:vph], "#{video[:engagement_rate]}%"]
+    end
+  end
+  puts videos_table
+
+  puts "\n🎯 Recommendations:".yellow
+  recommendations[:content_strategy].each do |rec|
+    puts "• #{rec}".cyan
+  end
+
+  puts "\n✨ Report generated successfully!".green
+  puts "📁 View full report at: #{Pipeline.configuration.storage_path}/reports/#{channel_id}"
+
+rescue Pipeline::Error => e
+  puts "❌ Error: #{e.message}".red
+end 

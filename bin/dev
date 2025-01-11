@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+
+if `gem list --no-installed --exact foreman`.strip.length > 0
+  puts "Installing foreman..."
+  system("gem install foreman")
+end
+
+# Default to port 3000 if not specified
+ENV["PORT"] ||= "3000"
+
+exec("foreman start -f Procfile.dev #{ARGV.join(' ')}")

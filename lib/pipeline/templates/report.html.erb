@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Channel Analysis Report - <%= @channel_id %></title>
+  <style>
+    /* Add your CSS styles here */
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    <header>
+      <h1>Channel Analysis Report</h1>
+      <div class="report-meta">
+        <p>Channel ID: <%= @channel_id %></p>
+        <p>Generated: <%= Time.now.utc.strftime("%Y-%m-%d %H:%M UTC") %></p>
+      </div>
+    </header>
+
+    <section class="performance-summary">
+      <h2>Performance Summary</h2>
+      <%= render_performance_summary(@insights[:performance_summary]) %>
+    </section>
+
+    <section class="trends">
+      <h2>Growth Trends</h2>
+      <div class="charts">
+        <img src="charts/views_trend.png" alt="Views Trend">
+        <img src="charts/engagement_trend.png" alt="Engagement Trend">
+      </div>
+      <%= render_trends_analysis(@metrics_data[:trends]) %>
+    </section>
+
+    <section class="recommendations">
+      <h2>Recommendations</h2>
+      <%= render_recommendations(@recommendations) %>
+    </section>
+
+    <section class="action-items">
+      <h2>Action Items</h2>
+      <%= render_action_items(@insights[:action_items]) %>
+    </section>
+  </div>
+</body>
+</html> 

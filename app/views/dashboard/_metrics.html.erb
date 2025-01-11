@@ -1,0 +1,16 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold mb-2">Average Views</h3>
+    <p class="text-3xl font-bold"><%= number_with_delimiter(metrics[:average_views].round) %></p>
+  </div>
+  
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold mb-2">Growth Rate</h3>
+    <p class="text-3xl font-bold"><%= metrics[:view_growth_rate] %>%</p>
+  </div>
+  
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold mb-2">Engagement Rate</h3>
+    <p class="text-3xl font-bold"><%= metrics[:engagement_rates][:overall] %>%</p>
+  </div>
+</div> 

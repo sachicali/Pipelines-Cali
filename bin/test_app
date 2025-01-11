@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require_relative '../config/boot'
+require 'terminal-table'
+require 'colorize'
+
+# Configure Pipeline
+Pipeline.configure do |config|
+  config.youtube_api_key = ENV['YOUTUBE_API_KEY']
+end
+
+# Test channel (MrBeast)
+channel_id = ARGV[0] || 'UCX6OQ3DkcsbYNE6H8uQQuVA'
+
+puts "🚀 Starting Pipeline test...".green
+
+begin
+  # Initialize analytics
+  analytics = Pipeline::YouTubeAnalytics.new(Pipeline.configuration.youtube_api_key)
+  analyzer = Pipeline::YouTubeChannelAnalyzer.new(channel_id, analytics.service)
+  
+  # Get analysis results
+  results = analyzer.analyze
+  
+  puts "\n✅ Analysis complete! Check the web interface at:".green
+  puts "http://localhost:9292/grid".blue
+  puts "\nOr view the results directly at:".green
+  puts "http://localhost:9292/results/#{channel_id}".blue
+rescue => e
+  puts "❌ Error: #{e.message}".red
+end 

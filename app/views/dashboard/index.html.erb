@@ -1,0 +1,13 @@
+<div class="container mx-auto px-4 py-8">
+  <turbo-frame id="metrics">
+    <%= render "metrics", metrics: @results[:performance_metrics] %>
+  </turbo-frame>
+
+  <turbo-frame id="charts">
+    <%= render "charts", data: @results %>
+  </turbo-frame>
+
+  <turbo-frame id="recommendations">
+    <%= render "recommendations", recommendations: @results[:recommendations] %>
+  </turbo-frame>
+</div> 
