@@ -1,60 +1,24 @@
 <%# Minimalistic Dashboard with React Integration %>
 <div class="container mx-auto px-4 py-8">
-  <%# React Metrics Grid %>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div id="average-views">
-      <%= content_tag :div,
-          nil,
-          data: {
-            react_component: "metrics-card",
-            props: {
-              title: "Average Views",
-              value: number_with_delimiter(@metrics_data[:average_views]),
-              description: "Average views per video"
-            }.to_json
-          }
-      %>
-    </div>
-
-    <div id="growth-rate">
-      <%= content_tag :div,
-          nil,
-          data: {
-            react_component: "metrics-card",
-            props: {
-              title: "Growth Rate",
-              value: "#{@metrics_data[:view_growth_rate]}%",
-              description: "Channel growth over time"
-            }.to_json
-          }
-      %>
-    </div>
-
-    <div id="engagement-rate">
-      <%= content_tag :div,
-          nil,
-          data: {
-            react_component: "metrics-card",
-            props: {
-              title: "Engagement",
-              value: "#{@metrics_data[:engagement_rate]}%",
-              description: "Overall engagement rate"
-            }.to_json
-          }
-      %>
-    </div>
+  <div id="metrics-root" 
+       data-metrics="<%= {
+         metrics: [
+           { id: 'views', title: 'Average Views', value: number_with_delimiter(@metrics_data[:average_views]), description: 'Average views per video' },
+           { id: 'growth', title: 'Growth Rate', value: "#{@metrics_data[:view_growth_rate]}%", description: 'Channel growth over time' },
+           { id: 'engagement', title: 'Engagement', value: "#{@metrics_data[:engagement_rate]}%", description: 'Overall engagement rate' }
+         ]
+       }.to_json %>">
   </div>
 </div>
 
-<%# Initialize React Components %>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-react-component]').forEach(element => {
-    const props = JSON.parse(element.dataset.props)
-    const Component = window[element.dataset.reactComponent]
-    if (Component) {
-      ReactDOM.createRoot(element).render(React.createElement(Component, props))
-    }
-  })
+  const root = document.getElementById('metrics-root')
+  const data = JSON.parse(root.dataset.metrics)
+  const container = ReactDOM.createRoot(root)
+  
+  container.render(
+    React.createElement(MetricsDisplay, data)
+  )
 })
 </script>
