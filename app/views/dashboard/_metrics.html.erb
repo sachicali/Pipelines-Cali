@@ -1,16 +1,25 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-semibold mb-2">Average Views</h3>
-    <p class="text-3xl font-bold"><%= number_with_delimiter(metrics[:average_views].round) %></p>
-  </div>
-  
-  <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-semibold mb-2">Growth Rate</h3>
-    <p class="text-3xl font-bold"><%= metrics[:view_growth_rate] %>%</p>
-  </div>
-  
-  <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-semibold mb-2">Engagement Rate</h3>
-    <p class="text-3xl font-bold"><%= metrics[:engagement_rates][:overall] %>%</p>
-  </div>
-</div> 
+<%# Dashboard Metrics Component
+    Displays key channel metrics in a minimalistic grid layout
+    Uses Tailwind CSS for responsive design and dark mode support %>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-controller="metrics">
+  <% metrics_data = [
+    { title: "Average Views", value: number_with_delimiter(metrics[:average_views].round), unit: nil },
+    { title: "Growth Rate", value: metrics[:view_growth_rate], unit: "%" },
+    { title: "Engagement Rate", value: metrics[:engagement_rates][:overall], unit: "%" }
+  ] %>
+
+  <% metrics_data.each do |metric| %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-200 hover:shadow-md"
+         role="region"
+         aria-label="<%= metric[:title] %> metric">
+      <div class="flex flex-col space-y-2">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <%= metric[:title] %>
+        </h3>
+        <p class="text-2xl font-semibold text-gray-900 dark:text-white">
+          <%= metric[:value] %><%= metric[:unit] if metric[:unit] %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+</div>
