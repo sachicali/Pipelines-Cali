@@ -1,15 +1,15 @@
-# TO-DO
+# Files not added to memory
 
-This document outlines the tasks required to improve the application and address the issues identified during the code analysis.
+The following files in the `lib` directory and its subdirectories have not been added to the `AppStructure` memory entity:
 
-## Implement Missing Helper Methods in `YouTubeChannelAnalyzer`
-
-The following helper methods in `lib/pipeline/youtube_channel_analyzer.rb` need to be implemented:
-
--   `calculate_avg_views`: Calculates the average views per video.
--   `calculate_engagement_rate`: Calculates the engagement rate (likes + comments / views).
--   `find_best_upload_days`: Determines the optimal days for uploading videos based on historical data.
--   `find_best_upload_times`: Determines the optimal times for uploading videos based on historical data.
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/templates/grid_view.erb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/templates/index.erb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/templates/report.html.erb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/templates/results.erb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/workers/data_visualization_worker.rb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/workers/notification_worker.rb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/workers/recommendations_worker.rb`
+- `/Users/chicali/Code/Pipelines-Cali/lib/pipeline/workers/visualization_worker.rb`
 -   `calculate_consistency_score`: Calculates a score representing the consistency of the upload schedule.
 -   `calculate_view_growth_rate`: Calculates the growth rate of views over time.
 -   `calculate_engagement_trends`: Analyzes trends in engagement metrics.

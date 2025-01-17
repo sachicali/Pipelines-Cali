@@ -18,6 +18,7 @@ Comprehensive documentation is available in the `docs/` directory:
 - [Configuration Documentation](docs/06-Configuration.md)
 - [Testing Documentation](docs/07-Testing.md)
 - [Memory Documentation](docs/08-Memory.md)
+- [Bin Scripts Documentation](docs/09-Bin-Scripts.md)
 - [Changelog](CHANGELOG.md)
 
 ## Features
@@ -34,7 +35,7 @@ Comprehensive documentation is available in the `docs/` directory:
 - Ruby (see `.ruby-version` for specific version)
 - Redis (for background jobs)
 - Node.js (see `.node-version` for specific version)
-- PostgreSQL
+- SQLite3
 
 ## Installation
 
@@ -98,6 +99,21 @@ analyzer = Pipeline::ChannelAnalyzer.new(channel_id)
 results = analyzer.analyze
 ```
 
+## Bin Scripts
+
+The `bin/` directory contains various utility scripts:
+
+- `analyze_channel`: Main script for analyzing YouTube channels
+- `dev`: Starts the development environment
+- `docker-entrypoint`: Docker entrypoint script
+- `jobs`: Starts Sidekiq for background jobs
+- `kamal`: Deployment management
+- `rails`: Rails CLI wrapper
+- `rake`: Rake task runner
+- `rubocop`: Code style checker
+- `setup`: Initial setup script
+- `test_app`: Test application runner
+
 ## Testing
 
 Run the test suite:
@@ -126,4 +142,4 @@ The application uses:
 This project is licensed under the MIT License.
 
 ---
-Last updated: 2025-01-17
+Last updated: 2025-01-18

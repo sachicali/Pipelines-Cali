@@ -14,10 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created a memory structure for the project, including the main project memory and sub-memories
 - Added file contents to the AppStructure memory
 - Created PROJECT-REV-MEMORY.md to explain the memory structure and provide instructions for future AI agents
+- Added documentation for bin scripts in README.md
+- Updated Configuration, Models, and Testing documentation with information about the database schema and seed data
 
 ### Changed
 - Updated README.md with documentation section
 - Updated last modified date in README.md
+- Updated CHANGELOG.md with recent changes
+- Updated README.md with correct database information
+- Updated last modified date in README.md
+- Updated Configuration documentation with correct database information
 
 ## [1.0.0] - 2025-01-17
 
