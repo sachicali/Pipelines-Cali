@@ -6,6 +6,20 @@ A Ruby-based YouTube analytics system for processing and analyzing channel data.
 
 Pipeline is a powerful analytics tool designed to process YouTube channel data, providing insights, visualizations, and recommendations for content creators.
 
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- [API Documentation](docs/01-API.md)
+- [GUI Documentation](docs/02-GUI.md)
+- [Workers Documentation](docs/03-Workers.md)
+- [Services Documentation](docs/04-Services.md)
+- [Models Documentation](docs/05-Models.md)
+- [Configuration Documentation](docs/06-Configuration.md)
+- [Testing Documentation](docs/07-Testing.md)
+- [Memory Documentation](docs/08-Memory.md)
+- [Changelog](CHANGELOG.md)
+
 ## Features
 
 - Channel performance analysis
@@ -112,4 +126,4 @@ The application uses:
 This project is licensed under the MIT License.
 
 ---
-Last updated: 2025-01-12
+Last updated: 2025-01-17
