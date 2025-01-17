@@ -1,25 +1,25 @@
 <%# Dashboard Metrics Component
-    Displays key channel metrics in a minimalistic grid layout
-    Uses Tailwind CSS for responsive design and dark mode support %>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-controller="metrics">
-  <% metrics_data = [
-    { title: "Average Views", value: number_with_delimiter(metrics[:average_views].round), unit: nil },
-    { title: "Growth Rate", value: metrics[:view_growth_rate], unit: "%" },
-    { title: "Engagement Rate", value: metrics[:engagement_rates][:overall], unit: "%" }
-  ] %>
-
-  <% metrics_data.each do |metric| %>
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-200 hover:shadow-md"
-         role="region"
-         aria-label="<%= metric[:title] %> metric">
-      <div class="flex flex-col space-y-2">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">
-          <%= metric[:title] %>
-        </h3>
-        <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-          <%= metric[:value] %><%= metric[:unit] if metric[:unit] %>
-        </p>
-      </div>
-    </div>
-  <% end %>
-</div>
+    Implements minimalistic design principles with focus on clarity and simplicity %>
+<section class="metrics-section py-6" aria-labelledby="metrics-heading">
+  <h2 id="metrics-heading" class="sr-only">Channel Metrics</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <% [
+      { title: "Average Views", value: number_with_delimiter(metrics[:average_views].round), description: "Average views per video" },
+      { title: "Growth Rate", value: "#{metrics[:view_growth_rate]}%", description: "Channel growth over time" },
+      { title: "Engagement", value: "#{metrics[:engagement_rates][:overall]}%", description: "Overall engagement rate" }
+    ].each do |metric| %>
+      <article class="metric-card bg-white dark:bg-gray-800 p-4 rounded border border-gray-100 dark:border-gray-700">
+        <div class="flex flex-col">
+          <dt class="order-2 mt-2">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= metric[:title] %></h3>
+            <p class="mt-1 text-xs text-gray-400 dark:text-gray-500"><%= metric[:description] %></p>
+          </dt>
+          <dd class="order-1 text-3xl font-bold text-gray-900 dark:text-white">
+            <%= metric[:value] %>
+          </dd>
+        </div>
+      </article>
+    <% end %>
+  </div>
+</section>
