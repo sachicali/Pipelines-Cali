@@ -1,25 +1,17 @@
-<%# Dashboard Metrics Component
-    Implements minimalistic design principles with focus on clarity and simplicity %>
-<section class="metrics-section py-6" aria-labelledby="metrics-heading">
-  <h2 id="metrics-heading" class="sr-only">Channel Metrics</h2>
-  
+<%# Dashboard Metrics Component - Minimalistic React Implementation %>
+<section class="metrics-section py-6">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <% [
-      { title: "Average Views", value: number_with_delimiter(metrics[:average_views].round), description: "Average views per video" },
-      { title: "Growth Rate", value: "#{metrics[:view_growth_rate]}%", description: "Channel growth over time" },
-      { title: "Engagement", value: "#{metrics[:engagement_rates][:overall]}%", description: "Overall engagement rate" }
-    ].each do |metric| %>
-      <article class="metric-card bg-white dark:bg-gray-800 p-4 rounded border border-gray-100 dark:border-gray-700">
-        <div class="flex flex-col">
-          <dt class="order-2 mt-2">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400"><%= metric[:title] %></h3>
-            <p class="mt-1 text-xs text-gray-400 dark:text-gray-500"><%= metric[:description] %></p>
-          </dt>
-          <dd class="order-1 text-3xl font-bold text-gray-900 dark:text-white">
-            <%= metric[:value] %>
-          </dd>
-        </div>
-      </article>
+    <% metrics_data = [
+      { id: "views", title: "Average Views", value: number_with_delimiter(metrics[:average_views].round), description: "Average views per video" },
+      { id: "growth", title: "Growth Rate", value: "#{metrics[:view_growth_rate]}%", description: "Channel growth over time" },
+      { id: "engagement", title: "Engagement", value: "#{metrics[:engagement_rates][:overall]}%", description: "Overall engagement rate" }
+    ] %>
+
+    <% metrics_data.each do |metric| %>
+      <div id="metric-<%= metric[:id] %>" 
+           data-react-component="metrics-card"
+           data-props="<%= metric.to_json %>">
+      </div>
     <% end %>
   </div>
 </section>
