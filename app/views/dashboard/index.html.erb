@@ -13,10 +13,10 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('metrics-root')
-  const data = JSON.parse(root.dataset.metrics)
+  const root = document.getElementById('metrics-root');
+  const data = JSON.parse(root.dataset.metrics);
   ReactDOM.createRoot(root).render(
     React.createElement(MetricsDisplay, data)
-  )
-})
+  );
+});
 </script>
