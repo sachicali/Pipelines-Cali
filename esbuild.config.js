@@ -1,4 +1,5 @@
 const esbuild = require('esbuild')
+const babel = require('esbuild-plugin-babel')
 
 // Basic esbuild configuration for React
 esbuild.build({
@@ -8,8 +9,20 @@ esbuild.build({
   outdir: 'app/assets/builds',
   publicPath: '/assets',
   loader: {
-    '.js': 'jsx'
+    '.js': 'jsx',
+    '.jsx': 'jsx',
+    '.ts': 'tsx',
+    '.tsx': 'tsx'
   },
+  plugins: [
+    babel({
+      jsxFactory: 'React.createElement',
+      jsxFragment: 'React.Fragment',
+      plugins: [
+        '@babel/plugin-transform-runtime'
+      ]
+    })
+  ],
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
   },
