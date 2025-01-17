@@ -1,120 +1,145 @@
 # Workers Documentation
 
-## Background Jobs
+## 1. Background Jobs
 
-### Core Workers
+### 1.1 Core Workers
 - `app/jobs/channel_analysis_job.rb` - Channel analysis job
 - `lib/pipeline/workers/channel_analysis_worker.rb` - Channel analysis worker
 - `lib/pipeline/workers/data_visualization_worker.rb` - Data visualization worker
 - `lib/pipeline/workers/notification_worker.rb` - Notification worker
-- `lib/pipeline/workers/recommendation_worker.rb` - Recommendation worker
+- `lib/pipeline/workers/recommendations_worker.rb` - Recommendation worker
 - `lib/pipeline/workers/visualization_worker.rb` - Visualization worker
 
-### Base Worker
+### 1.2 Base Worker
 - `lib/pipeline/workers/base_worker.rb` - Base worker class
 
-### Job Configuration
+### 1.3 Job Configuration
 - `config/queue.yml` - Queue configuration
 - `config/recurring.yml` - Recurring jobs configuration
 
-### Execution
+### 1.4 Execution
 - `bin/jobs` - Job execution script
 - `config/sidekiq.rb` - Sidekiq configuration
 
-## Worker Responsibilities
+## 2. Worker Responsibilities
 
-### Channel Analysis
+### 2.1 Channel Analysis
 1. Fetch channel data
 2. Analyze metrics
 3. Store results
 
-### Data Visualization
+### 2.2 Data Visualization
 1. Process raw data
 2. Generate visualizations
 3. Cache results
 
-### Notifications
+### 2.3 Notifications
 1. Monitor channels
 2. Detect changes
 3. Send alerts
 
-## Memory Context
+## 3. Background Jobs
 
-### Worker Memory Structure
-The worker memory is organized as follows:
+### 3.1 Job Types
+- `AnalyticsJob` - Processes YouTube analytics data
+- `ChannelSyncJob` - Synchronizes channel data
+- `RecommendationJob` - Generates video recommendations
+- `NotificationJob` - Handles user notifications
 
-- **Worker Root**
-  - Type: Worker
+### 3.2 Job Queues
+- `default` - General purpose jobs
+- `analytics` - Analytics processing jobs
+- `recommendations` - Recommendation generation jobs
+- `notifications` - Notification delivery jobs
+
+### 3.3 Job Configuration
+- Configured in `config/sidekiq.yml`
+- Redis connection in `config/initializers/sidekiq.rb`
+- Monitoring available at `/sidekiq`
+
+## 4. Memory Context
+
+### 4.1 Workers Memory Structure
+The workers memory is organized as follows:
+
+- **4.1.1 Workers Root**
+  - Type: Workers
   - Description: Root node for all worker-related memory
   - Relations:
     - Connected to: Main Project Memory
-    - Connected to: Worker Type Memories
-
-- **Worker Type Memories**
-  - Type: WorkerType
-  - Description: Memory nodes for each worker type
-  - Observations:
-    - Stores worker configurations
-    - Tracks worker execution statistics
-    - Maintains worker dependencies
-  - Relations:
-    - Connected to: Worker Root
-    - Connected to: Job Memories
-
-- **Job Memories**
-  - Type: Job
-  - Description: Memory nodes for individual jobs
-  - Observations:
-    - Stores job parameters
-    - Tracks job status
-    - Maintains job results
-  - Relations:
-    - Connected to: Worker Type Memories
+    - Connected to: Job Type Memories
     - Connected to: Queue Memories
 
-### Memory Integration
-The worker system integrates with the project memory through:
+- **4.1.2 Job Type Memories**
+  - Type: JobType
+  - Description: Memory nodes for each job type
+  - Observations:
+    - Stores job configuration
+    - Tracks job execution statistics
+    - Maintains job dependencies
+  - Relations:
+    - Connected to: Workers Root
+    - Connected to: Queue Memories
 
-1. **Job Tracking**
+- **4.1.3 Queue Memories**
+  - Type: Queue
+  - Description: Memory nodes for each job queue
+  - Observations:
+    - Stores queue configuration
+    - Tracks queue performance metrics
+    - Maintains queue dependencies
+  - Relations:
+    - Connected to: Workers Root
+    - Connected to: Job Type Memories
+
+### 4.2 Memory Integration
+The workers system integrates with the project memory through:
+
+1.  **4.2.1 Job Tracking**
    - Each job execution is logged in memory with:
      - Job type
-     - Start time
-     - End time
-     - Status
-     - Results
+     - Execution time
+     - Parameters
+     - Status (success/failure)
+     - Error details (if any)
 
-2. **Queue Monitoring**
-   - Queue status is stored in memory with:
+2.  **4.2.2 Queue Monitoring**
+   - Queue statistics are stored in memory with:
      - Queue name
      - Job count
-     - Processing rate
+     - Processing time
      - Error rate
 
-3. **Worker Performance**
-   - Worker performance metrics are tracked in memory with:
-     - Execution time
+3.  **4.2.3 Performance Metrics**
+   - Worker performance is tracked in memory with:
+     - CPU usage
      - Memory usage
-     - Error rate
-     - Success rate
+     - Job throughput
+     - Error rates
 
-4. **Recurring Jobs**
-   - Recurring job schedules are stored in memory with:
-     - Job type
-     - Schedule
-     - Last run
-     - Next run
+4.  **4.2.4 Dependency Tracking**
+   - Job dependencies are stored in memory with:
+     - Parent-child relationships
+     - Execution order
+     - Failure cascades
 
-### Memory Access Patterns
-The worker system accesses memory through:
-- Job status tracking
-- Queue monitoring
-- Performance analysis
-- Schedule management
+### 4.3 Memory Access Patterns
+The workers system accesses memory through:
+- Job execution tracking
+- Queue performance monitoring
+- Error analysis
+- Dependency resolution
 
-### Example Memory Query
+### 4.4 Example Memory Query
 ```ruby
-# Query worker memory for job statistics
-analysis_memory = Memory.query(
-  type: 'WorkerType',
-  name: 'ChannelAnalysis'
+# Query workers memory for job statistics
+analytics_job_memory = Memory.query(
+  type: 'JobType',
+  name: 'AnalyticsJob'
+)
+
+# Query workers memory for queue performance
+default_queue_memory = Memory.query(
+  type: 'Queue',
+  name: 'default'
 )

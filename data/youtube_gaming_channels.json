@@ -1,0 +1,91 @@
+{
+    "youtube_channels": [
+        {
+            "name": "Unspeakable",
+            "username": "Unspeakable",
+            "primary_games": ["Minecraft", "Roblox"],
+            "target_audience": "Kids/Family-Friendly",
+            "subscriber_range": "10-15 million",
+            "content_type": ["Gaming", "Challenge Videos", "Gameplay"]
+        },
+        {
+            "name": "DanTDM",
+            "username": "DanTDM",
+            "primary_games": ["Minecraft", "Various Indie Games"],
+            "target_audience": "Kids/Teens",
+            "subscriber_range": "15-20 million",
+            "content_type": ["Gaming", "Minecraft Mods", "Commentary"]
+        },
+        {
+            "name": "PrestonPlayz",
+            "username": "PrestonPlayz",
+            "primary_games": ["Minecraft", "Roblox", "Among Us"],
+            "target_audience": "Kids/Family-Friendly",
+            "subscriber_range": "10-15 million",
+            "content_type": ["Gaming", "Challenge Videos", "Multiplayer"]
+        },
+        {
+            "name": "LankyBox",
+            "username": "LankyBox",
+            "primary_games": ["Roblox", "Various Online Games"],
+            "target_audience": "Kids/Family-Friendly",
+            "subscriber_range": "5-10 million",
+            "content_type": ["Comedy", "Gaming", "Reaction Videos"]
+        },
+        {
+            "name": "Jelly",
+            "username": "Jelle van Vucht",
+            "primary_games": ["Minecraft", "GTA 5", "Various Multiplayer Games"],
+            "target_audience": "Kids/Teens",
+            "subscriber_range": "20-25 million",
+            "content_type": ["Comedic Gaming", "Chaotic Gameplay"]
+        },
+        {
+            "name": "Stampy",
+            "username": "StampyLongHead",
+            "primary_games": ["Minecraft"],
+            "target_audience": "Kids",
+            "subscriber_range": "8-10 million",
+            "content_type": ["Family-Friendly", "Minecraft Adventure"]
+        },
+        {
+            "name": "EthanGamer",
+            "username": "EthanGamer",
+            "primary_games": ["Roblox", "Minecraft"],
+            "target_audience": "Kids",
+            "subscriber_range": "2-3 million",
+            "content_type": ["Gaming", "Let's Play"]
+        },
+        {
+            "name": "Kindly Keyin",
+            "username": "KindlyKeyin",
+            "primary_games": ["Roblox", "Minecraft"],
+            "target_audience": "Kids",
+            "subscriber_range": "1-2 million",
+            "content_type": ["Gaming", "Family-Friendly"]
+        },
+        {
+            "name": "Aphmau",
+            "username": "JessicaBravura",
+            "primary_games": ["Minecraft", "Role-Playing Games"],
+            "target_audience": "Kids/Teens",
+            "subscriber_range": "15-20 million",
+            "content_type": ["Storytelling", "Gaming", "Role-Play"]
+        },
+        {
+            "name": "Combo Panda",
+            "username": "ComboPanda",
+            "primary_games": ["Roblox", "Various Online Games"],
+            "target_audience": "Kids",
+            "subscriber_range": "1-2 million",
+            "content_type": ["Gaming", "Animated Content"]
+        }
+    ],
+    "metadata": {
+        "project": "Pipelines-Cali",
+        "data_type": "YouTube Gaming Channels",
+        "last_updated": "2024-01-18",
+        "total_channels": 10,
+        "primary_focus": ["Minecraft", "Roblox", "Family-Friendly Gaming"]
+    }
+}

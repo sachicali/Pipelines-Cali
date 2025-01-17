@@ -1,60 +1,65 @@
 # Configuration Documentation
 
-## Core Configuration Files
+## 1. Core Configuration Files
 
-### Application Configuration
+### 1.1 Application Configuration
 - `config/application.rb` - Main application configuration
+- `config/environments/` - Environment-specific configurations
+  - `development.rb` - Development environment
+  - `production.rb` - Production environment
+  - `test.rb` - Test environment
+
 - `config/boot.rb` - Boot configuration
 - `config/environment.rb` - Environment setup
 
-### Environment-Specific Configuration
-- `config/environments/development.rb` - Development settings
-- `config/environments/production.rb` - Production settings
-- `config/environments/test.rb` - Test settings
+### 1.2 Database Configuration
+- `config/database.yml` - Database connection settings
+- `config/initializers/active_record.rb` - ActiveRecord settings
+- `config/initializers/database_cleaner.rb` - Database cleaner settings
 
-### Database Configuration
-- `config/database.yml` - Database settings (SQLite3)
-- `db/schema.rb` - Database schema
-- `db/seeds.rb` - Seed data for initial database population
+### 1.3 API Configuration
+- `config/initializers/api_authentication.rb` - API authentication
+- `config/initializers/rate_limiting.rb` - API rate limiting
+- `config/initializers/sidekiq.rb` - Sidekiq configuration
 
-### Security Configuration
-- `config/credentials.yml.enc` - Encrypted credentials
-- `config/content_security_policy.rb` - CSP settings
-- `config/filter_parameter_logging.rb` - Parameter filtering
+### 1.4 Security Configuration
+- `config/initializers/devise.rb` - Devise authentication
+- `config/initializers/secure_headers.rb` - Security headers
+- `config/initializers/content_security_policy.rb` - CSP configuration
 
-## Configuration Patterns
+## 2. Configuration Patterns
 
-### Environment Variables
+### 2.1 Environment Variables
 ```ruby
 ENV['DATABASE_URL'] || 'sqlite3:db/development.sqlite3'
 ```
 
-### Initializers
+### 2.2 Initializers
 - `config/initializers/` - Contains all initializers
 - Common initializers:
   - `assets.rb` - Asset pipeline
   - `inflections.rb` - Custom inflections
   - `sidekiq.rb` - Sidekiq setup
 
-### Custom Configuration
+### 2.3 Custom Configuration
 ```ruby
 # config/application.rb
 config.x.custom_setting = ENV.fetch('CUSTOM_SETTING', 'default')
 ```
 
-## Memory Context
+## 3. Memory Context
 
-### Configuration Memory Structure
+### 3.1 Configuration Memory Structure
 The configuration memory is organized as follows:
 
-- **Configuration Root**
+- **3.1.1 Configuration Root**
   - Type: Configuration
   - Description: Root node for all configuration-related memory
   - Relations:
     - Connected to: Main Project Memory
     - Connected to: Configuration Type Memories
 
-- **Configuration Type Memories**
+- **3.1.2 Configuration Type Memories**
   - Type: ConfigurationType
   - Description: Memory nodes for each configuration type
   - Observations:
@@ -65,7 +70,7 @@ The configuration memory is organized as follows:
     - Connected to: Configuration Root
     - Connected to: Environment Memories
 
-- **Environment Memories**
+- **3.1.3 Environment Memories**
   - Type: Environment
   - Description: Memory nodes for environment-specific configurations
   - Observations:
@@ -76,45 +81,45 @@ The configuration memory is organized as follows:
     - Connected to: Configuration Type Memories
     - Connected to: Initializer Memories
 
-### Memory Integration
+### 3.2 Memory Integration
 The configuration system integrates with the project memory through:
 
-1. **Configuration Tracking**
+1.  **3.2.1 Configuration Tracking**
    - Configuration changes are logged in memory with:
      - Configuration key
      - Old value
      - New value
      - Timestamp
 
-2. **Environment Management**
+2.  **3.2.2 Environment Management**
    - Environment settings are stored in memory with:
      - Environment name
      - Settings
      - Overrides
      - Dependencies
 
-3. **Initializer Tracking**
+3.  **3.2.3 Initializer Tracking**
    - Initializer execution is tracked in memory with:
      - Initializer name
      - Execution time
      - Configuration changes
      - Dependencies
 
-4. **Security Tracking**
+4.  **3.2.4 Security Tracking**
    - Security configurations are stored in memory with:
      - Configuration type
      - Settings
      - Last modified
      - Dependencies
 
-### Memory Access Patterns
+### 3.3 Memory Access Patterns
 The configuration system accesses memory through:
 - Configuration value retrieval
 - Environment-specific settings
 - Initializer execution tracking
 - Security configuration analysis
 
-### Example Memory Query
+### 3.4 Example Memory Query
 ```ruby
 # Query configuration memory for database settings
 database_memory = Memory.query(
@@ -123,15 +128,15 @@ database_memory = Memory.query(
 )
 ```
 
-## Database Schema and Seed Data
+## 4. Database Schema and Seed Data
 
-### Database Schema
+### 4.1 Database Schema
 The database schema is defined in `db/schema.rb`. This file is auto-generated from the current state of the database and should not be edited directly. Instead, use Active Record migrations to incrementally modify the database and then regenerate the schema definition.
 
-### Seed Data
+### 4.2 Seed Data
 The seed data for initial database population is defined in `db/seeds.rb`. This file ensures the existence of records required to run the application in every environment (production, development, test). The code here should be idempotent so that it can be executed at any point in every environment. The data can then be loaded with the `bin/rails db:seed` command (or created alongside the database with `db:setup`).
 
-### Example Seed Data
+### 4.3 Example Seed Data
 ```ruby
 # db/seeds.rb
 # This file should ensure the existence of records required to run the application in every environment (production,

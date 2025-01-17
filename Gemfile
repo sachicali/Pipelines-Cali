@@ -70,3 +70,4 @@ group :test do
   gem "vcr"
   gem "simplecov"
 end 
+gem "tiptap-ruby", "~> 0.9.12"
