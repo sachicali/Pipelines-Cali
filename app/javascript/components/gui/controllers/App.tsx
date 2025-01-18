@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Router } from 'react-router-dom'; // Changed Routes to Router to fix build error
 import Dashboard from '../views/pages/Dashboard';
 import Recommendations from '../views/pages/Recommendations';
 import Notifications from '../views/pages/Notifications';
@@ -11,12 +11,12 @@ const App: React.FC = () => {
     <BrowserRouter>
       <div className="min-h-screen">
         <Header />
-        <Routes>
+        <Router>
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/notifications" element={<Notifications />} />
-        </Routes>
+        </Router>
       </div>
     </BrowserRouter>
   );
