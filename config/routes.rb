@@ -17,4 +17,7 @@ Rails.application.routes.draw do
   
   # Root route to the React frontend
   root 'application#index'
+  
+  # React dashboard view
+  get '/dashboard/react', to: 'dashboard#react'
 end 

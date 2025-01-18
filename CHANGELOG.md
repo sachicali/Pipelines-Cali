@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TypeScript configuration with tsconfig.json
 - TypeScript support for all JavaScript files
 - TypeScript build process integration
+- Redis integration for background job processing
+- Real-time data caching with Redis
+- Pub/Sub messaging system using Redis
+- Redis-based session storage
+- Rate limiting using Redis
+- Redis documentation in docs/09-Redis.md
 
 ### Changed
 - Updated README.md with documentation section

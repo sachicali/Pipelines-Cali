@@ -1,0 +1,17 @@
+<div id="chart-container" class="bg-white rounded-lg shadow p-6">
+  <div id="chart-root"></div>
+</div>
+
+<script type="module">
+  import { createRoot } from 'react-dom/client';
+  import Chart from '../../javascript/components/gui/views/components/Chart';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('chart-root');
+    createRoot(root).render(
+      React.createElement(Chart, {
+        data: <%= @chart_data.to_json.html_safe %>
+      })
+    );
+  });
+</script>

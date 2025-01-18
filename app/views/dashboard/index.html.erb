@@ -22,14 +22,18 @@
        }.to_json %>">
   </div>
 </div>
-<script type="module" src="/app/javascript/components/gui/views/components/Metrics.jsx"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('metrics-root');
-  const data = JSON.parse(root.dataset.metrics);
-  ReactDOM.createRoot(root).render(
-    React.createElement(MetricsDisplay, data)
-  );
-});
+<%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+
+<script type="module">
+  import { createRoot } from 'react-dom/client';
+  import MetricsDisplay from '../../assets/builds/components/gui/views/components/MetricsDisplay';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('metrics-root');
+    const data = JSON.parse(root.dataset.metrics);
+    createRoot(root).render(
+      React.createElement(MetricsDisplay, data)
+    );
+  });
 </script>

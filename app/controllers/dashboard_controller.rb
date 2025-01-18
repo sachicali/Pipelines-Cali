@@ -11,6 +11,26 @@ class DashboardController < ApplicationController
       engagement_rate: metrics[:engagement_rates][:overall]
     }
 
+    # Data for React components
+    @metrics = [
+      { name: 'Average Views', value: metrics[:average_views].round, trend: metrics[:view_growth_rate] },
+      { name: 'Engagement Rate', value: metrics[:engagement_rates][:overall], trend: 0 },
+      { name: 'Subscribers', value: metrics[:subscriber_count], trend: metrics[:subscriber_growth_rate] },
+      { name: 'Watch Time', value: metrics[:watch_time_minutes], trend: metrics[:watch_time_growth_rate] }
+    ]
+
+    @chart_data = metrics[:views_over_time].map do |date, views|
+      { name: date.strftime('%b'), value: views }
+    end
+
+    @competitors = metrics[:competitor_analysis].map do |competitor|
+      {
+        name: competitor[:channel_title],
+        subscribers: competitor[:subscriber_count],
+        growth: competitor[:growth_rate]
+      }
+    end
+
     respond_to do |format|
       format.html
       format.json { render json: @metrics_data }

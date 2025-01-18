@@ -1,0 +1,28 @@
+<div id="dashboard-root" class="h-full">
+  <div class="flex flex-col h-full">
+    <%= render partial: 'dashboard/navbar' %>
+    <main class="flex-1 p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <%= render partial: 'dashboard/metrics_display' %>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <%= render partial: 'dashboard/chart' %>
+        <%= render partial: 'dashboard/competitor_cards' %>
+      </div>
+    </main>
+  </div>
+</div>
+
+<%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+
+<script type="module">
+  import { createRoot } from 'react-dom/client';
+  import Dashboard from '../../javascript/components/gui/views/pages/Dashboard';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('dashboard-root');
+    createRoot(root).render(
+      React.createElement(Dashboard)
+    );
+  });
+</script>

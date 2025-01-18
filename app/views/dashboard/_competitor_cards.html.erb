@@ -1,0 +1,17 @@
+<div id="competitor-cards" class="grid grid-cols-1 gap-4">
+  <%= render partial: 'dashboard/competitor_card', collection: @competitors, as: :competitor %>
+</div>
+
+<script type="module">
+  import { createRoot } from 'react-dom/client';
+  import CompetitorCard from '../../javascript/components/gui/views/components/CompetitorCard';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('competitor-cards');
+    createRoot(root).render(
+      React.createElement(CompetitorCard, {
+        competitors: <%= @competitors.to_json.html_safe %>
+      })
+    );
+  });
+</script>

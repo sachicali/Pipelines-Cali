@@ -16,6 +16,13 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
   - Strict type checking
   - Seamless integration with Rails
 
+- **Redis Integration**
+  - Background job processing
+  - Real-time data caching
+  - Pub/Sub messaging system
+  - Session storage
+  - Rate limiting
+
 - **Analytics Dashboard**
   - Real-time channel statistics
   - Video performance tracking
@@ -43,6 +50,7 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
 - [Configuration Documentation](docs/06-Configuration.md)
 - [Testing Documentation](docs/07-Testing.md)
 - [TypeScript Documentation](docs/08-TypeScript.md)
+- [Redis Documentation](docs/09-Redis.md)
 
 ## Installation
 1. Clone the repository
@@ -51,12 +59,20 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
    yarn install
    bundle install
    ```
-3. Configure TypeScript
+3. Install Redis
+   ```bash
+   brew install redis
+   ```
+4. Configure TypeScript
    ```bash
    yarn add typescript @types/react @types/react-dom
    ```
-4. Configure the database
-5. Run the application
+5. Configure the database
+6. Start Redis server
+   ```bash
+   redis-server
+   ```
+7. Run the application
 
 ## Usage
 1. Start the application
@@ -107,6 +123,17 @@ The README memory is organized as follows:
     - Connected to: README Root
     - Connected to: Feature Memories
 
+- **Redis Memory**
+  - Type: Feature
+  - Description: Memory node for Redis integration
+  - Observations:
+    - Tracks Redis configuration
+    - Monitors Redis performance
+    - Stores Redis-related errors
+  - Relations:
+    - Connected to: README Root
+    - Connected to: Workers Memory
+
 ### Memory Integration
 The README system integrates with the project memory through:
 
@@ -152,6 +179,12 @@ The README system accesses memory through:
 features_memory = Memory.query(
   type: 'Section',
   name: 'Features'
+)
+
+# Query Redis memory for configuration
+redis_memory = Memory.query(
+  type: 'Feature',
+  name: 'Redis'
 )
 
 # Query README memory for recent updates

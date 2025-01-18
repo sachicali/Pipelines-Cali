@@ -5,5 +5,3 @@
 import { Application } from "@hotwired/stimulus"
 import HelloController from "./hello_controller.ts"
 
-const application = Application.start()
-application.register("hello", HelloController)
