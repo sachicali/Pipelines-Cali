@@ -25,6 +25,10 @@ module Pipeline
     config.logger = ActiveSupport::Logger.new(STDOUT)
     config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
+    # Asset paths
+    config.assets.paths << Rails.root.join('app/assets/builds/js')
+    config.assets.paths << Rails.root.join('app/assets/builds/css')
+
     # Basic cache configuration
     config.cache_store = :memory_store
   end

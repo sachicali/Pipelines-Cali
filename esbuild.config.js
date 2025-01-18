@@ -13,7 +13,7 @@ esbuild.build({
   ],
   bundle: true,
   sourcemap: true,
-  outdir: 'app/assets/builds',
+  outdir: 'app/assets/builds/js',
   publicPath: '/assets',
   plugins: [
     babel({
@@ -39,7 +39,7 @@ esbuild.build({
 esbuild.build({
   entryPoints: ['app/assets/stylesheets/application.tailwind.css'],
   bundle: true,
-  outdir: 'app/assets/builds',
+  outdir: 'app/assets/builds/css',
   loader: {
     '.css': 'css'
   },
