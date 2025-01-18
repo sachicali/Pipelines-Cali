@@ -71,3 +71,5 @@ group :test do
   gem "simplecov"
 end 
 gem "tiptap-ruby", "~> 0.9.12"
+
+gem "shadcn-ui", "~> 0.0.15"

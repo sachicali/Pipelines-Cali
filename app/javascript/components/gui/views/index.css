@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 270 50% 40%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 270 30% 20%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 270 20% 15%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 150 100% 40%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 270 20% 25%;
+  --input: 270 20% 25%;
+  --ring: 270 50% 40%;
+  --radius: 0.75rem;
+  --violet-glow-color: 280 50% 20%;
+  --gold-accent-color: 50 100% 60%;
+  --emerald-accent-color: 150 100% 40%;
+}
+
+body {
+  @apply bg-black text-white;
+}
+
+.gradient-bg {
+  background: radial-gradient(
+    circle at top right,
+    hsl(270, 50%, 10%) 0%,
+    hsl(270, 50%, 5%) 50%,
+    hsl(270, 50%, 2%) 100%
+  );
+}
+
+.glass-effect {
+  background: rgba(56, 29, 91, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(129, 61, 156, 0.2);
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #8a2be2, #6a1b9a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.purple-glow {
+  box-shadow: 0 0 10px hsl(var(--violet-glow-color) / 0.3);
+}
+
+.purple-glow:hover {
+  box-shadow: 0 0 15px hsl(var(--violet-glow-color) / 0.5);
+}
+
+.accent-glow {
+  box-shadow: 0 0 15px hsl(var(--emerald-accent-color) / 0.3);
+}
+
+.accent-glow:hover {
+  box-shadow: 0 0 25px hsl(var(--emerald-accent-color) / 0.5);
+}
+
+.gold-accent-text {
+  background: linear-gradient(45deg, hsl(var(--gold-accent-color)), hsl(var(--gold-accent-color) / 0.8));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-glow {
+  box-shadow: 0 0 10px hsl(var(--gold-accent-color) / 0.3);
+}
+
+.gold-glow:hover {
+  box-shadow: 0 0 15px hsl(var(--gold-accent-color) / 0.5);
+}

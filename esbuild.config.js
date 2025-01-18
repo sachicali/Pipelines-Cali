@@ -3,17 +3,11 @@ const babel = require('esbuild-plugin-babel')
 
 // Basic esbuild configuration for React
 esbuild.build({
-  entryPoints: ['app/javascript/application.js'],
+  entryPoints: ['app/javascript/application.tsx'],
   bundle: true,
   sourcemap: true,
   outdir: 'app/assets/builds',
   publicPath: '/assets',
-  loader: {
-    '.js': 'jsx',
-    '.jsx': 'jsx',
-    '.ts': 'tsx',
-    '.tsx': 'tsx'
-  },
   plugins: [
     babel({
       jsxFactory: 'React.createElement',

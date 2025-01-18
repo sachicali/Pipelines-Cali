@@ -10,6 +10,12 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
 - Audience engagement insights
 
 ## Features
+- **TypeScript Integration**
+  - Full TypeScript support for frontend components
+  - Type-safe React components
+  - Strict type checking
+  - Seamless integration with Rails
+
 - **Analytics Dashboard**
   - Real-time channel statistics
   - Video performance tracking
@@ -36,17 +42,35 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
 - [Models Documentation](docs/05-Models.md)
 - [Configuration Documentation](docs/06-Configuration.md)
 - [Testing Documentation](docs/07-Testing.md)
+- [TypeScript Documentation](docs/08-TypeScript.md)
 
 ## Installation
 1. Clone the repository
 2. Install dependencies
-3. Configure the database
-4. Run the application
+   ```bash
+   yarn install
+   bundle install
+   ```
+3. Configure TypeScript
+   ```bash
+   yarn add typescript @types/react @types/react-dom
+   ```
+4. Configure the database
+5. Run the application
 
 ## Usage
 1. Start the application
 2. Access the GUI
 3. Use the API for integration
+4. TypeScript Development
+   - Run type checking:
+     ```bash
+     yarn tsc
+     ```
+   - Start development server:
+     ```bash
+     yarn dev
+     ```
 
 ## Contributing
 1. Fork the repository

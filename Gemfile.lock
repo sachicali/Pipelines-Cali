@@ -216,6 +216,7 @@ GEM
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    lru_redux (1.1.0)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -410,6 +411,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shadcn-ui (0.0.15)
+      tailwind_merge (~> 0.12)
     sidekiq (7.3.7)
       connection_pool (>= 2.3.0)
       logger
@@ -443,6 +446,8 @@ GEM
     stringio (3.1.2)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
+    tailwind_merge (0.14.0)
+      lru_redux (~> 1.1)
     tailwindcss-rails (3.2.0)
       railties (>= 7.0.0)
       tailwindcss-ruby
@@ -531,6 +536,7 @@ DEPENDENCIES
   ruby-lsp-rails
   ruby-lsp-rspec
   selenium-webdriver
+  shadcn-ui (~> 0.0.15)
   sidekiq
   sidekiq-batch
   simplecov
