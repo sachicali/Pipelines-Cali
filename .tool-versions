@@ -1,2 +1,4 @@
 ruby 3.4.1-1 
 yarn 4.6.0
+rails 8.0.1
+node 23.5.0

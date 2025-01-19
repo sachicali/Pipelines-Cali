@@ -12,17 +12,17 @@ require 'json'
 class WebApp
   def call(env)
     request = Rack::Request.new(env)
-    
+
     case request.path
     when '/'
-      [200, {'Content-Type' => 'text/html'}, [render_dashboard]]
+      [ 200, { 'Content-Type' => 'text/html' }, [ render_dashboard ] ]
     when '/grid'
-      [200, {'Content-Type' => 'text/html'}, [render_grid]]
+      [ 200, { 'Content-Type' => 'text/html' }, [ render_grid ] ]
     when %r{/results/(.+)}
       channel_id = $1
-      [200, {'Content-Type' => 'application/json'}, [get_channel_results(channel_id)]]
+      [ 200, { 'Content-Type' => 'application/json' }, [ get_channel_results(channel_id) ] ]
     else
-      [404, {'Content-Type' => 'text/plain'}, ['Not Found']]
+      [ 404, { 'Content-Type' => 'text/plain' }, [ 'Not Found' ] ]
     end
   end
 
@@ -43,4 +43,4 @@ class WebApp
   end
 end
 
-run WebApp.new 
+run WebApp.new

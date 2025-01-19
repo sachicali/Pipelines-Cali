@@ -73,3 +73,5 @@ end
 gem "tiptap-ruby", "~> 0.9.12"
 
 gem "shadcn-ui", "~> 0.0.15"
+
+gem "yarn", "~> 0.1.1"
