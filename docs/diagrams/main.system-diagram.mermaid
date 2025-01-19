@@ -1,0 +1,175 @@
+%%{init: {
+  'flowchart': { 
+    'curve': 'monotoneX',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Enhanced Style Definitions
+    classDef ruby fill:#701516,stroke:#701516,color:#fff,stroke-width:2px
+    classDef js fill:#f7df1e,stroke:#887100,stroke-width:2px,color:#000
+    classDef ts fill:#3178c6,stroke:#235a97,stroke-width:2px,color:#fff
+    classDef erb fill:#701516,stroke:#701516,color:#fff,stroke-width:1px
+    classDef yml fill:#6d8086,stroke:#6d8086,color:#fff,stroke-width:1px
+    classDef cmd fill:#4d4d4d,stroke:#4d4d4d,color:#fff,stroke-width:1px
+    classDef warning fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#c62828
+    classDef framework fill:#4a148c,stroke:#4a148c,color:#ffffff,stroke-width:3px
+    classDef service fill:#0097a7,stroke:#006064,stroke-width:2px,color:#fff
+    classDef test fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff
+
+    %% Framework Nodes
+    RAILS[Ruby on Rails]:::framework
+    REACT[React]:::framework
+    STIMULUS[Stimulus]:::framework
+    TAILWIND[Tailwind CSS]:::framework
+    TYPESCRIPT[TypeScript]:::framework
+
+    %% Warning Nodes
+    WARN1["❗ Missing Controller Registrations"]:::warning
+    WARN2["❗ Incomplete Test Coverage"]:::warning
+    WARN3["❗ Missing TypeScript Types"]:::warning
+    WARN4["❗ Missing API Documentation"]:::warning
+    WARN5["❗ Incomplete Service Implementation"]:::warning
+
+    subgraph Frontend["Frontend Layer"]
+        direction TB
+        
+        subgraph React["React Core"]
+            App(App.tsx):::ts
+            Router(Router):::ts
+            Components(UI Components):::ts
+            TSConfig(tsconfig.json):::js
+        end
+
+        subgraph UI["UI Components"]
+            direction LR
+            subgraph Pages["Pages"]
+                Dashboard(Dashboard.tsx):::ts
+                Analytics(Analytics.tsx):::ts
+                Landing(Landing.tsx):::ts
+                Notifications(Notifications.tsx):::ts
+            end
+
+            subgraph Common["Common Components"]
+                MetricsCard(MetricsCard.tsx):::ts
+                MetricsDisplay(MetricsDisplay.tsx):::ts
+                CompetitorCard(CompetitorCard.tsx):::ts
+                Chart(Chart.tsx):::ts
+            end
+        end
+
+        subgraph ShadCN["ShadCN UI"]
+            Button(button.jsx):::js
+            Card(card.jsx):::js
+            Table(table.jsx):::js
+            THEME(shadcn.tailwind.js):::js
+        end
+    end
+
+    subgraph Backend["Backend Layer"]
+        direction TB
+
+        subgraph API["API Controllers"]
+            APIBase(base_controller.rb):::ruby
+            APIChannels(channels_controller.rb):::ruby
+            APIDashboard(dashboard_controller.rb):::ruby
+        end
+
+        subgraph Services["Service Layer"]
+            YTAnalytics(youtube_analytics.rb):::service
+            YTChannel(youtube_channel_analyzer.rb):::service
+            YTVisualizer(youtube_data_visualizer.rb):::service
+            MetricsService(metrics_service.rb):::service
+        end
+
+        subgraph Workers["Background Jobs"]
+            ChannelAnalysis(channel_analysis_worker.rb):::ruby
+            DataVisualization(data_visualization_worker.rb):::ruby
+            Notifications(notification_worker.rb):::ruby
+            Recommendations(recommendations_worker.rb):::ruby
+        end
+
+        subgraph Models["Data Models"]
+            Channel(channel.rb):::ruby
+            Video(video.rb):::ruby
+            Analytics(analytics_report.rb):::ruby
+            Validator(youtube_channel_validator.rb):::ruby
+        end
+    end
+
+    subgraph Storage["Data Layer"]
+        PostgreSQL[(PostgreSQL)]
+        Redis[(Redis Cache)]
+        Assets[(Asset Storage)]
+    end
+
+    subgraph Config["Configuration"]
+        AppConfig(application.rb):::ruby
+        DBConfig(database.yml):::yml
+        RedisConfig(cache.yml):::yml
+        Routes(routes.rb):::ruby
+    end
+
+    subgraph Testing["Test Suite"]
+        Services_Spec(services_specs.rb):::test
+        Models_Spec(models_specs.rb):::test
+        API_Spec(api_specs.rb):::test
+        System_Spec(system_specs.rb):::test
+    end
+
+    %% Framework Dependencies
+    TYPESCRIPT --> TSConfig
+    REACT --> App
+    RAILS --> APIBase
+    STIMULUS --> Frontend
+    TAILWIND --> THEME
+
+    %% Frontend Flow
+    Router --> Dashboard & Analytics & Landing & Notifications
+    Dashboard --> MetricsCard & MetricsDisplay & CompetitorCard & Chart
+    ShadCN --> Common
+    Common --> Pages
+
+    %% Backend Flow
+    APIBase --> Services
+    Services --> Models
+    Services --> Workers
+    Workers --> Storage
+    Models --> Storage
+
+    %% Data Flow
+    MetricsDisplay -.-> YTAnalytics
+    CompetitorCard -.-> YTChannel
+    Chart -.-> YTVisualizer
+    
+    %% Cache Flow
+    Services -- "Cache" --> Redis
+    Workers -- "Queue" --> Redis
+    
+    %% Database Flow
+    Models -- "Persist" --> PostgreSQL
+    
+    %% Warning Connections
+    Dashboard --> WARN1
+    Testing --> WARN2
+    TSConfig --> WARN3
+    APIBase --> WARN4
+    Services --> WARN5
+
+    %% Testing Connections
+    Services_Spec -- "Tests" --> Services
+    Models_Spec -- "Tests" --> Models
+    API_Spec -- "Tests" --> API
+    System_Spec -- "Tests" --> Frontend
+
+    %% Status Links
+    linkStyle default stroke:#666,stroke-width:1px
+    linkStyle 0,1,2,3,4 stroke:#4a148c,stroke-width:2px
+    linkStyle 5,6,7,8,9 stroke:#1565c0,stroke-width:2px
+    linkStyle 10,11,12,13 stroke:#6a1b9a,stroke-width:2px
+    linkStyle 14,15,16 stroke:#0097a7,stroke-width:2px,stroke-dasharray: 5 5
+    linkStyle 17,18 stroke:#d32f2f,stroke-width:2px

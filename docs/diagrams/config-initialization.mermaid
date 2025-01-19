@@ -1,0 +1,47 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant B as Boot Process
+    participant E as Environment
+    participant A as Application
+    participant I as Initializers
+    participant S as Security
+    participant DB as Database
+
+    %% Boot Process
+    B->>+E: Load Environment
+    E->>E: Load ENV Variables
+    E->>+A: Initialize Application
+    
+    %% Application Setup
+    A->>A: Load Defaults
+    A->>A: Configure Frameworks
+    A->>+I: Run Initializers
+    
+    %% Initializers
+    I->>DB: Configure Database
+    I->>S: Setup Security
+    
+    alt Development Environment
+        I->>I: Enable Debug
+        I->>I: Configure Assets
+    else Production Environment
+        I->>I: Enable Caching
+        I->>S: Strict Security
+    end
+
+    I-->>-A: Initializers Complete
+    
+    %% Final Steps
+    A->>A: Setup Routes
+    A->>A: Load Middleware
+    A-->>-E: Application Ready
+    E-->>-B: Boot Complete
+
+    %% Error Handling
+    Note over B,DB: Error Scenarios
+    B->>E: Missing ENV
+    E->>E: Load Defaults
+    
+    A->>I: Initializer Fails
+    I->>I: Log Error
+    I->>A: Skip/Continue

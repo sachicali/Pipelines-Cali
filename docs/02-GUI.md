@@ -1,129 +1,207 @@
 # GUI Documentation
 
-## 1. Views
+## 1. Architecture Overview
 
-### 1.1 Main Layouts
-- `app/views/layouts/application.html.erb` - Main application layout
-- `app/views/layouts/mailer.html.erb` - Email layout
-- `app/views/layouts/mailer.text.erb` - Plain text email layout
+### 1.1 Component Structure
+```mermaid
+reference: gui-architecture
+```
 
-### 1.2 Dashboard Views
-- `app/views/dashboard/index.html.erb` - Main dashboard view
-- `app/views/dashboard/_metrics.html.erb` - Metrics partial
-- `app/views/dashboard/_channel_analytics.html.erb` - Channel analytics partial
-- `app/views/dashboard/_recommendations.html.erb` - Recommendations partial
+The GUI is built using:
+- React components for dynamic interfaces
+- Stimulus controllers for behavior
+- ERB templates for layouts
+- Tailwind CSS for styling
 
-### 1.3 PWA Views
-- `app/views/pwa/manifest.json.erb` - PWA manifest
-- `app/views/pwa/service-worker.js` - Service worker
-- `app/views/pwa/offline.html.erb` - Offline fallback page
+### 1.2 Component Interactions
+```mermaid
+reference: component-interactions
+```
 
-## 2. JavaScript Controllers
+## 2. Frontend Components
 
-### 2.1 Stimulus Controllers
-- `app/javascript/controllers/application.js` - Main Stimulus application
-- `app/javascript/controllers/chart_controller.js` - Chart controller
-- `app/javascript/controllers/dashboard_controller.js` - Dashboard controller
-- `app/javascript/controllers/analytics_controller.js` - Analytics controller
-- `app/javascript/controllers/index.js` - Controller index
+### 2.1 React Components
+Located in `app/javascript/components/`:
+```typescript
+// Dashboard.tsx
+interface DashboardProps {
+  channelId: string;
+  metrics: MetricData[];
+}
 
-### 2.2 Public JavaScript
-- `public/css/js/charts.js` - Charting utilities
-- `public/css/js/dashboard.js` - Dashboard utilities
-- `public/css/js/grid.js` - Grid utilities
-- `public/css/js/analytics.js` - Analytics utilities
+const Dashboard: React.FC<DashboardProps> = ({ channelId, metrics }) => {
+  // Component implementation
+};
+```
 
-## 3. CSS/Assets
-- `app/assets/stylesheets/application.tailwind.css` - Main stylesheet
-- `public/css/styles.css` - Compiled CSS
-- `app/assets/stylesheets/components/` - Component-specific styles
-  - `_charts.css` - Chart styles
-  - `_dashboard.css` - Dashboard styles
-  - `_analytics.css` - Analytics styles
+### 2.2 Stimulus Controllers
+Located in `app/javascript/controllers/`:
+```javascript
+// chart_controller.js
+import { Controller } from "@hotwired/stimulus"
 
-## 4. Memory Context
+export default class extends Controller {
+  static targets = ["chart", "data"]
+  
+  initialize() {
+    // Controller initialization
+  }
+}
+```
 
-### 4.1 GUI Memory Structure
-The GUI memory is organized as follows:
+## 3. View Templates
 
-- **4.1.1 GUI Root**
-  - Type: GUI
-  - Description: Root node for all GUI-related memory
-  - Relations:
-    - Connected to: Main Project Memory
-    - Connected to: View Memories
-    - Connected to: Controller Memories
+### 3.1 Layouts
+- `application.html.erb`: Main application layout
+- `mailer.html.erb`: Email template layout
+- `mailer.text.erb`: Plain text email layout
 
-- **4.1.2 View Memories**
-  - Type: View
-  - Description: Memory nodes for each view
-  - Observations:
-    - Stores view templates and partials
-    - Tracks view usage statistics
-    - Maintains view dependencies
-  - Relations:
-    - Connected to: GUI Root
-    - Connected to: Layout Memories
+### 3.2 Dashboard Views
+- `dashboard/index.html.erb`: Main dashboard
+- `dashboard/_metrics.html.erb`: Metrics partial
+- `dashboard/_channel_analytics.html.erb`: Analytics
+- `dashboard/_recommendations.html.erb`: Recommendations
 
-- **4.1.3 Controller Memories**
-  - Type: Controller
-  - Description: Memory nodes for JavaScript controllers
-  - Observations:
-    - Stores controller logic
-    - Tracks controller events
-    - Maintains controller dependencies
-  - Relations:
-    - Connected to: GUI Root
-    - Connected to: View Memories
+### 3.3 PWA Support
+- `pwa/manifest.json.erb`: Progressive Web App manifest
+- `pwa/service-worker.js`: Service worker
+- `pwa/offline.html.erb`: Offline fallback page
 
-### 4.2 Memory Integration
-The GUI system integrates with the project memory through:
+## 4. Styling
 
-1.  **4.2.1 View Tracking**
-   - Each view render is logged in memory with:
-     - View name
-     - Render time
-     - Data context
-     - User context
+### 4.1 Tailwind Configuration
+```javascript
+// tailwind.config.js
+module.exports = {
+  content: [
+    './app/views/**/*.erb',
+    './app/javascript/**/*.tsx'
+  ],
+  theme: {
+    extend: {
+      // Custom theme extensions
+    }
+  }
+}
+```
 
-2.  **4.2.2 Controller Events**
-   - Controller events are stored in memory with:
-     - Event type
-     - Target element
-     - Event data
-     - Timestamp
+### 4.2 Component Styles
+- `app/assets/stylesheets/components/*.css`
+- Component-specific styles using Tailwind
 
-3.  **4.2.3 Asset Management**
-   - Asset usage is tracked in memory with:
-     - Asset type (CSS/JS)
-     - Load time
-     - Dependencies
-     - Usage statistics
+## 5. Known Issues
 
-4.  **4.2.4 User Interactions**
-   - User interactions are stored in memory with:
-     - Interaction type (click, hover, etc.)
-     - Target element
-     - Interaction data
-     - Timestamp
+### 5.1 Missing Implementations
+- ❌ Incomplete TypeScript type definitions
+- ❌ Missing component test coverage
+- ❌ Incomplete error handling
+- ❌ Missing accessibility features
 
-### 4.3 Memory Access Patterns
-The GUI system accesses memory through:
-- View rendering statistics
-- Controller event logging
-- Asset performance tracking
-- User interaction analysis
+### 5.2 Performance Issues
+- Large bundle size for charts
+- Delayed hydration on complex pages
+- Memory leaks in some components
 
-### 4.4 Example Memory Query
-```ruby
-# Query GUI memory for view statistics
-dashboard_memory = Memory.query(
-  type: 'View',
-  name: 'dashboard/index'
-)
+## 6. Development Guidelines
 
-# Query GUI memory for controller events
-analytics_controller_memory = Memory.query(
-  type: 'Controller',
-  name: 'analytics_controller'
-)
+### 6.1 Component Creation
+```typescript
+// Template for new components
+import React from 'react';
+import { useChannel } from '@/hooks/useChannel';
+
+interface ComponentProps {
+  // Define props
+}
+
+export const Component: React.FC<ComponentProps> = (props) => {
+  // Implementation
+};
+```
+
+### 6.2 Controller Creation
+```javascript
+// Template for Stimulus controllers
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = []
+  static values = {}
+  
+  connect() {
+    // Implementation
+  }
+}
+```
+
+## 7. Testing
+
+### 7.1 React Components
+```typescript
+// Component test template
+import { render, screen } from '@testing-library/react'
+import { Component } from './Component'
+
+describe('Component', () => {
+  it('renders correctly', () => {
+    render(<Component />)
+    // Assertions
+  })
+})
+```
+
+### 7.2 Stimulus Controllers
+```javascript
+// Controller test template
+import { Application } from "@hotwired/stimulus"
+import Controller from "./controller"
+
+describe("Controller", () => {
+  it("initializes correctly", () => {
+    // Test implementation
+  })
+})
+```
+
+## 8. Best Practices
+
+### 8.1 Performance
+- Use React.memo for pure components
+- Implement code splitting
+- Optimize bundle size
+- Use proper loading states
+
+### 8.2 Accessibility
+- Implement ARIA attributes
+- Ensure keyboard navigation
+- Maintain focus management
+- Test with screen readers
+
+## 9. Documentation
+
+### 9.1 Component Documentation
+```typescript
+/**
+ * @component
+ * @example
+ * <MetricsCard 
+ *   metric={metricData}
+ *   onUpdate={handleUpdate}
+ * />
+ */
+```
+
+### 9.2 Controller Documentation
+```javascript
+/**
+ * @stimulus chart
+ * @target chart The chart container element
+ * @target data The data source element
+ */
+```
+
+## Notes
+- All React components use TypeScript
+- Stimulus controllers handle DOM interactions
+- ERB templates provide server-rendered structure
+- CSS uses Tailwind utility classes

@@ -1,0 +1,41 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant A as Application
+    participant J as Job
+    participant Q as Queue
+    participant W as Worker
+    participant S as Storage
+    participant M as Monitoring
+
+    %% Normal Job Flow
+    A->>+J: Enqueue Job
+    J->>+Q: Push to Queue
+    Q-->>-J: Job Queued
+    J-->>-A: Job ID
+
+    Q->>+W: Process Job
+    W->>S: Store Initial State
+    W->>W: Process Data
+    W->>S: Update Results
+    W-->>-Q: Job Complete
+
+    %% Monitoring
+    W->>M: Log Performance
+    M->>S: Store Metrics
+
+    %% Error Flow
+    Note over A,M: Error Handling
+    A->>J: Enqueue Job
+    J->>Q: Push to Queue
+    Q->>W: Process Job
+    W->>W: Job Fails
+    W->>Q: Retry Job
+    Q->>W: Retry Processing
+    
+    alt Max Retries Exceeded
+        W->>M: Log Failure
+        M->>A: Send Alert
+    else Retry Successful
+        W->>S: Store Results
+        W->>M: Log Recovery
+    end

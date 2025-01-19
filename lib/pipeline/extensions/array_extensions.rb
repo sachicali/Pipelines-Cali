@@ -7,6 +7,8 @@ module Pipeline
         mean = sum / size.to_f
         squared_diffs = map { |value| (value - mean) ** 2 }
         Math.sqrt(squared_diffs.sum / size)
+      rescue ZeroDivisionError
+        0
       end
     end
   end

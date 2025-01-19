@@ -1,238 +1,234 @@
 # Models Documentation
 
-## 1. Core Models
+## 1. Model Architecture
 
-### 1.1 Channel Model
-- Location: `app/models/channel.rb`
-- Attributes:
-  - `youtube_id` - YouTube channel ID
-  - `title` - Channel title
-  - `description` - Channel description
-  - `subscriber_count` - Number of subscribers
-  - `view_count` - Total views
-  - `video_count` - Number of videos
-- Associations:
-  - Has many videos
-  - Has many analytics reports
-  - Belongs to user
+### 1.1 Class Structure
+```mermaid
+reference: model-architecture
+```
 
-### 1.2 Video Model
-- Location: `app/models/video.rb`
-- Attributes:
-  - `youtube_id` - YouTube video ID
-  - `title` - Video title
-  - `description` - Video description
-  - `view_count` - Number of views
-  - `like_count` - Number of likes
-  - `comment_count` - Number of comments
-- Associations:
-  - Belongs to channel
-  - Has many analytics reports
+### 1.2 Validation Flow
+```mermaid
+reference: model-validation-flow
+```
 
-### 1.3 AnalyticsReport Model
-- Location: `app/models/analytics_report.rb`
-- Attributes:
-  - `start_date` - Report start date
-  - `end_date` - Report end date
-  - `views` - Number of views
-  - `watch_time` - Total watch time
-  - `subscribers_gained` - New subscribers
-  - `subscribers_lost` - Lost subscribers
-- Associations:
-  - Belongs to channel
-  - Belongs to video
+## 2. Core Models
 
-### 1.4 Recommendation Model
-- Location: `app/models/recommendation.rb`
-- Attributes:
-  - `video_id` - Recommended video ID
-  - `score` - Recommendation score
-  - `reason` - Recommendation reason
-- Associations:
-  - Belongs to channel
-  - Belongs to user
-
-### 1.5 ApplicationRecord
-- `app/models/application_record.rb` - Base model class
-
-### 1.6 Concerns
-- `app/models/concerns/youtube_channel_validator.rb` - YouTube channel validation
-
-## 2. Model Responsibilities
-
-### 2.1 Data Validation
-- Validate channel data
-- Ensure data integrity
-- Enforce business rules
-
-### 2.2 Relationships
-- Define model associations
-- Manage data relationships
-- Handle cascading operations
-
-### 2.3 Callbacks
-- Before/after actions
-- Data transformation
-- State management
-
-## 3. Validation Patterns
-
-### 3.1 YouTube Channel Validation
+### 2.1 Channel Model
 ```ruby
 class Channel < ApplicationRecord
-  include YoutubeChannelValidator
+  # Attributes
+  attribute :youtube_id, :string
+  attribute :title, :string
+  attribute :description, :text
+  attribute :subscriber_count, :integer
+  attribute :view_count, :integer
+  attribute :video_count, :integer
 
-  validates :channel_id, presence: true
+  # Associations
+  has_many :videos, dependent: :destroy
+  has_many :analytics_reports
+  belongs_to :user
+
+  # Validations
+  validates :youtube_id, presence: true, uniqueness: true
+  validates :title, presence: true
   validate :valid_youtube_channel
+
+  # Callbacks
+  before_validation :normalize_youtube_id
+  after_create :fetch_channel_data
 end
 ```
 
-### 3.2 Custom Validations
+### 2.2 Video Model
 ```ruby
-class Metric < ApplicationRecord
-  validate :positive_values
+class Video < ApplicationRecord
+  # Attributes
+  attribute :youtube_id, :string
+  attribute :title, :string
+  attribute :description, :text
+  attribute :view_count, :integer
+  attribute :like_count, :integer
+  attribute :comment_count, :integer
+
+  # Associations
+  belongs_to :channel
+  has_many :analytics_reports, dependent: :destroy
+
+  # Validations
+  validates :youtube_id, presence: true, uniqueness: true
+  validates :title, presence: true
+
+  # Scopes
+  scope :popular, -> { where('view_count > ?', 1000) }
+  scope :recent, -> { where('created_at > ?', 7.days.ago) }
+end
+```
+
+## 3. Validation Patterns
+
+### 3.1 Custom Validators
+```ruby
+module YoutubeChannelValidator
+  extend ActiveSupport::Concern
+
+  included do
+    validate :valid_youtube_channel
+  end
 
   private
 
-  def positive_values
-    errors.add(:base, 'Values must be positive') if value <= 0
+  def valid_youtube_channel
+    return if youtube_id.blank?
+
+    unless YouTubeApiService.channel_exists?(youtube_id)
+      errors.add(:youtube_id, "is not a valid YouTube channel")
+    end
+  end
+end
+```
+
+### 3.2 Model Callbacks
+```ruby
+class AnalyticsReport < ApplicationRecord
+  before_validation :set_date_range
+  after_create :process_analytics
+  before_save :calculate_metrics
+
+  private
+
+  def set_date_range
+    self.end_date ||= Time.current
+    self.start_date ||= 1.month.ago
   end
 end
 ```
 
 ## 4. Query Interface
-- Active Record queries
-- Scopes
-- Custom finders
 
-## 5. Memory Context
-
-### 5.1 Model Memory Structure
-The model memory is organized as follows:
-
-- **5.1.1 Model Root**
-  - Type: Model
-  - Description: Root node for all model-related memory
-  - Relations:
-    - Connected to: Main Project Memory
-    - Connected to: Model Type Memories
-
-- **5.1.2 Model Type Memories**
-  - Type: ModelType
-  - Description: Memory nodes for each model type
-  - Observations:
-    - Stores model schemas
-    - Tracks model usage statistics
-    - Maintains model relationships
-  - Relations:
-    - Connected to: Model Root
-    - Connected to: Instance Memories
-
-- **5.1.3 Instance Memories**
-  - Type: Instance
-  - Description: Memory nodes for model instances
-  - Observations:
-    - Stores instance data
-    - Tracks instance state
-    - Maintains instance relationships
-  - Relations:
-    - Connected to: Model Type Memories
-    - Connected to: Validation Memories
-
-### 5.2 Memory Integration
-The model system integrates with the project memory through:
-
-1.  **5.2.1 Model Tracking**
-   - Each model operation is logged in memory with:
-     - Model type
-     - Operation type (create/update/delete)
-     - Attributes changed
-     - Timestamp
-
-2.  **5.2.2 Schema Tracking**
-   - Model schemas are stored in memory with:
-     - Attributes
-     - Validations
-     - Relationships
-     - Callbacks
-
-3.  **5.2.3 Association Tracking**
-   - Model associations are stored in memory with:
-     - Association type
-     - Related models
-     - Operation statistics
-     - Performance metrics
-
-4.  **5.2.4 Validation Tracking**
-   - Model validations are stored in memory with:
-     - Validation rules
-     - Validation errors
-     - Error rates
-     - Common failure patterns
-
-5.  **5.2.5 Query Tracking**
-   - Model queries are stored in memory with:
-
-6.  **5.2.6 Instance Tracking**
-   - Model instances are tracked in memory with:
-     - Instance data
-     - State changes
-     - Validation status
-     - Relationships
-
-7.  **5.2.7 Query Tracking**
-   - Model queries are logged in memory with:
-     - Query type
-     - Parameters
-     - Execution time
-     - Result count
-
-8.  **5.2.8 Validation Tracking**
-   - Model validations are stored in memory with:
-     - Validation type
-     - Status
-     - Error messages
-     - Context
-
-### 5.3 Memory Access Patterns
-The model system accesses memory through:
-- Schema retrieval
-- Instance tracking
-- Query optimization
-- Validation analysis
-
-### 5.4 Example Memory Query
+### 4.1 Scopes
 ```ruby
-# Query model memory for channel schema
-channel_memory = Memory.query(
-  type: 'ModelType',
-  name: 'Channel'
-)
-
-# Query models memory for Video associations
-video_association_memory = Memory.query(
-  type: 'Association',
-  model: 'Video'
-)
+class Channel < ApplicationRecord
+  scope :active, -> { where('last_sync_at > ?', 24.hours.ago) }
+  scope :popular, -> { where('subscriber_count > ?', 1000) }
+  scope :trending, -> { 
+    joins(:analytics_reports)
+    .where('analytics_reports.created_at > ?', 7.days.ago)
+    .order('analytics_reports.views DESC')
+  }
+end
 ```
 
-## 6. Database Schema and Seed Data
-
-### 6.1 Database Schema
-The database schema is defined in `db/schema.rb`. This file is auto-generated from the current state of the database and should not be edited directly. Instead, use Active Record migrations to incrementally modify the database and then regenerate the schema definition.
-
-### 6.2 Seed Data
-The seed data for initial database population is defined in `db/seeds.rb`. This file ensures the existence of records required to run the application in every environment (production, development, test). The code here should be idempotent so that it can be executed at any point in every environment. The data can then be loaded with the `bin/rails db:seed` command (or created alongside the database with `db:setup`).
-
-### 6.3 Example Seed Data
+### 4.2 Custom Finders
 ```ruby
-# db/seeds.rb
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+module ChannelFinder
+  def find_by_youtube_url(url)
+    youtube_id = extract_youtube_id(url)
+    find_by(youtube_id: youtube_id)
+  end
+
+  private
+
+  def extract_youtube_id(url)
+    # Implementation
+  end
+end
+```
+
+## 5. Database Schema
+
+### 5.1 Migrations
+```ruby
+class CreateChannels < ActiveRecord::Migration[7.0]
+  def change
+    create_table :channels do |t|
+      t.string :youtube_id, null: false, index: { unique: true }
+      t.string :title
+      t.text :description
+      t.integer :subscriber_count
+      t.integer :view_count
+      t.integer :video_count
+      t.references :user, foreign_key: true
+
+      t.timestamps
+    end
+  end
+end
+```
+
+### 5.2 Indexes
+```ruby
+add_index :videos, [:channel_id, :youtube_id]
+add_index :analytics_reports, [:reportable_type, :reportable_id]
+```
+
+## 6. Performance Optimization
+
+### 6.1 Counter Cache
+```ruby
+class Video < ApplicationRecord
+  belongs_to :channel, counter_cache: true
+end
+```
+
+### 6.2 Eager Loading
+```ruby
+Channel.includes(:videos, :analytics_reports)
+      .where(active: true)
+```
+
+## 7. Testing
+
+### 7.1 Model Specs
+```ruby
+RSpec.describe Channel, type: :model do
+  describe 'validations' do
+    it { should validate_presence_of(:youtube_id) }
+    it { should validate_uniqueness_of(:youtube_id) }
+  end
+
+  describe 'associations' do
+    it { should have_many(:videos) }
+    it { should have_many(:analytics_reports) }
+    it { should belong_to(:user) }
+  end
+end
+```
+
+### 7.2 Factory Definitions
+```ruby
+FactoryBot.define do
+  factory :channel do
+    sequence(:youtube_id) { |n| "CHANNEL#{n}" }
+    title { "Test Channel" }
+    description { "Test Description" }
+    subscriber_count { 1000 }
+    view_count { 5000 }
+    video_count { 100 }
+
+    association :user
+  end
+end
+```
+
+## 8. Best Practices
+
+### 8.1 Model Guidelines
+- Keep models skinny, controllers thin
+- Use concerns for shared functionality
+- Validate at the model layer
+- Use callbacks sparingly
+- Keep scopes focused and composable
+
+### 8.2 Performance Tips
+- Use counter caches for counts
+- Index frequently queried columns
+- Eager load associations when needed
+- Use batch processing for large datasets
+
+## Notes
+- All models inherit from ApplicationRecord
+- Validations happen before save
+- Use transactions for complex operations
+- Monitor model performance metrics

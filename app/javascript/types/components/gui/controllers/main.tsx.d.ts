@@ -1,0 +1,1 @@
+// Type definitions for app/javascript/components/gui/controllers/main.tsx

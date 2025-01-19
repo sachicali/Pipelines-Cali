@@ -1,0 +1,39 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant C as Client
+    participant YT as YouTube Service
+    participant A as Analytics Service
+    participant R as Recommendation Service
+    participant CA as Cache Service
+    participant DB as Database
+
+    %% Normal Flow
+    C->>+YT: Request Channel Data
+    YT->>YT: Validate Request
+    YT->>CA: Check Cache
+    
+    alt Cache Hit
+        CA-->>YT: Return Cached Data
+    else Cache Miss
+        YT->>+A: Process Analytics
+        A->>DB: Fetch Historical Data
+        DB-->>A: Return Data
+        A->>R: Generate Recommendations
+        R->>DB: Store Recommendations
+        A-->>-YT: Return Analysis
+        YT->>CA: Cache Results
+    end
+    
+    YT-->>-C: Return Response
+
+    %% Error Handling
+    Note over C,DB: Error Scenarios
+    C->>YT: Invalid Request
+    YT-->>C: Validation Error
+    
+    C->>YT: Valid Request
+    YT->>A: Process Request
+    A->>A: Processing Error
+    A-->>YT: Error Response
+    YT->>YT: Retry Logic
+    YT-->>C: Error Status

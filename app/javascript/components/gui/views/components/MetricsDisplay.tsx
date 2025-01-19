@@ -124,32 +124,40 @@ const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
 
             {chartData && (
               <div className="mt-4" style={{ height: '300px' }}>
-                <Chart
-                  type="line"
-                  data={chartData}
-                  options={{
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        display: false
-                      }
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        grid: {
-                          color: '#E5E7EB'
-                        }
-                      },
-                      x: {
-                        grid: {
-                          color: '#E5E7EB'
-                        }
-                      }
-                    }
-                  }}
-                />
+                {(() => {
+                  try {
+                    return (
+                      <Chart
+                        type="line"
+                        data={chartData}
+                        options={{
+                          responsive: true,
+                          plugins: {
+                            legend: {
+                              display: false
+                            }
+                          },
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              grid: {
+                                color: '#E5E7EB'
+                              }
+                            },
+                            x: {
+                              grid: {
+                                color: '#E5E7EB'
+                              }
+                            }
+                          }
+                        }}
+                      />
+                    );
+                  } catch (error) {
+                    console.error('Failed to render metrics display chart:', error);
+                    return <div className="text-red-500">Failed to render metrics display chart.</div>;
+                  }
+                })()}
               </div>
             )}
           </div>

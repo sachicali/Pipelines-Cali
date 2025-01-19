@@ -19,11 +19,11 @@ module Pipeline
         )
         
         channel = response.items.first
-        raise APIError, "Channel not found: #{channel_id}" unless channel
+        raise Pipeline::APIError, "Channel not found: #{channel_id}" unless channel
 
         format_channel_data(channel)
       rescue Google::Apis::Error => e
-        raise APIError, "YouTube API error: #{e.message}"
+        raise Pipeline::Error, "YouTube API error: #{e.message}"
       end
     end
 
@@ -35,7 +35,7 @@ module Pipeline
     end
 
     def validate_channel_id!(channel_id)
-      raise ValidationError, "Invalid channel ID" unless channel_id =~ /^UC[\w-]{22}$/
+      raise Pipeline::ValidationError, "Invalid channel ID" unless channel_id =~ /^UC[\w-]{22}$/
     end
 
     def format_channel_data(channel)

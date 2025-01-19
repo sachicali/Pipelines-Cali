@@ -1,0 +1,51 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 40,
+    'rankSpacing': 50,
+    'padding': 20
+  },
+  'theme': 'base'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef ruby fill:#701516,stroke:#701516,color:#fff,stroke-width:2px
+    classDef erb fill:#701516,stroke:#701516,color:#fff,stroke-width:1px
+    classDef js fill:#f1e05a,stroke:#887100,stroke-width:2px
+    classDef json fill:#292929,stroke:#292929,color:#fff,stroke-width:2px
+    classDef warn fill:#f44336,stroke:#d32f2f,color:#fff,stroke-width:2px
+
+    subgraph Views["views/"]
+        subgraph Dashboard["dashboard/"]
+            Chart["_chart.html.erb"]:::erb
+            CompCards["_competitor_cards.html.erb"]:::erb
+            Metrics["_metrics.html.erb"]:::erb
+            MetricsDisplay["_metrics_display.html.erb"]:::erb
+            Navbar["_navbar.html.erb"]:::erb
+            Index["index.html.erb"]:::erb
+            React["react.html.erb"]:::erb
+            ViewRB["view.rb"]:::ruby
+        end
+
+        subgraph Layouts["layouts/"]
+            AppLayout["application.html.erb"]:::erb
+            MailerHTML["mailer.html.erb"]:::erb
+            MailerText["mailer.text.erb"]:::erb
+        end
+
+        subgraph PWA["pwa/"]
+            Manifest["manifest.json.erb"]:::json
+            ServiceWorker["service-worker.js"]:::js
+        end
+    end
+
+    %% Warnings
+    MissingTemplates["❌ Missing View Templates"]:::warn
+    MissingPartials["❌ Missing Shared Partials"]:::warn
+
+    %% Connections
+    Dashboard --> Layouts
+    PWA --> Layouts
+    MissingTemplates -.-> Views
+    MissingPartials -.-> Dashboard

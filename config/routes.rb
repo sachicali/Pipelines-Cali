@@ -5,6 +5,15 @@ Rails.application.routes.draw do
         post :analyze, on: :collection
         get :status, on: :member
         get :results, on: :member
+        get :dashboard, on: :member
+        get :competitors, on: :member
+        get :notifications, on: :member
+        post :import, on: :collection
+      end
+      
+      resources :users, only: [:index] do
+        post :login, on: :collection
+        post :register, on: :collection
       end
     end
   end
@@ -20,4 +29,7 @@ Rails.application.routes.draw do
   
   # React dashboard view
   get '/dashboard/react', to: 'dashboard#react'
+  get '/admin/settings', to: 'dashboard#react'
+  get '/login', to: 'dashboard#react'
+  get '/register', to: 'dashboard#react'
 end 

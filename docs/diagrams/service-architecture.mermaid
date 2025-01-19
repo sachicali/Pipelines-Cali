@@ -1,0 +1,69 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef core fill:#1976D2,stroke:#1976D2,color:#fff,stroke-width:2px
+    classDef support fill:#388E3C,stroke:#388E3C,color:#fff,stroke-width:2px
+    classDef external fill:#6A1B9A,stroke:#6A1B9A,color:#fff,stroke-width:2px
+    classDef data fill:#E65100,stroke:#E65100,color:#fff,stroke-width:2px
+    classDef error fill:#D32F2F,stroke:#D32F2F,color:#fff,stroke-width:2px
+
+    %% Core Services
+    subgraph CoreServices["Core Services"]
+        YTService["YouTube API Service"]:::core
+        AnalyticsService["Analytics Service"]:::core
+        RecoService["Recommendation Service"]:::core
+        NotifService["Notification Service"]:::core
+        ChannelService["Channel Service"]:::core
+    end
+
+    %% Support Services
+    subgraph SupportServices["Support Services"]
+        CacheService["Cache Service"]:::support
+        MetricsService["Metrics Service"]:::support
+    end
+
+    %% External Services
+    subgraph ExternalAPIs["External APIs"]
+        YouTubeAPI["YouTube API"]:::external
+        EmailService["Email Service"]:::external
+    end
+
+    %% Data Storage
+    subgraph DataStorage["Data Layer"]
+        DB[(PostgreSQL)]:::data
+        Cache[(Redis)]:::data
+    end
+
+    %% Error Handling
+    subgraph ErrorHandling["Error Handling"]
+        ServiceErrors["Service Errors"]:::error
+        RetryMechanism["Retry Logic"]:::error
+        ErrorTracking["Error Tracking"]:::error
+    end
+
+    %% Service Connections
+    YTService --> YouTubeAPI
+    AnalyticsService --> YTService
+    RecoService --> AnalyticsService
+    NotifService --> EmailService
+    ChannelService --> YTService
+
+    %% Data Flow
+    CoreServices --> CacheService
+    CoreServices --> MetricsService
+    CacheService --> Cache
+    MetricsService --> DB
+
+    %% Error Handling
+    CoreServices -.-> ServiceErrors
+    ServiceErrors --> RetryMechanism
+    ServiceErrors --> ErrorTracking

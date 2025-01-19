@@ -27,17 +27,26 @@ const Metrics: React.FC<MetricsProps> = ({ metric }) => {
       <h3 className="text-lg font-semibold mb-2">{metric.name} Chart</h3>
       <div style={{ width: '100%', height: 100 }}>
         <ResponsiveContainer>
-          <LineChart data={metric.chartData}>
-            <XAxis dataKey="day" hide />
-            <YAxis hide />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={metric.trend >= 0 ? 'hsl(var(--emerald-accent-color))' : '#ef4444'}
-              strokeWidth={2}
-            />
-          </LineChart>
+          {(() => {
+            try {
+              return (
+                <LineChart data={metric.chartData}>
+                  <XAxis dataKey="day" hide />
+                  <YAxis hide />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke={metric.trend >= 0 ? 'hsl(var(--emerald-accent-color))' : '#ef4444'}
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              );
+            } catch (error) {
+              console.error('Failed to render metrics chart:', error);
+              return <div className="text-red-500">Failed to render metrics chart.</div>;
+            }
+          })()}
         </ResponsiveContainer>
       </div>
     </div>

@@ -43,10 +43,14 @@ module Pipeline
       end
     end
     
-    def schedule_analysis
-      Workers::ChannelAnalysisWorker.perform_async(@channel_id)
-    end
     
+    def schedule_analysis
+      begin
+        Workers::ChannelAnalysisWorker.perform_async(@channel_id)
+      rescue StandardError => e
+        Rails.logger.error("Error enqueuing channel analysis for channel #{@channel_id}: #{e.message}\n#{e.backtrace.join("\n")}")
+      end
+    end
     def analysis_complete?
       %w[analysis dashboard recommendations].all? do |type|
         cache_status(type) == 'completed'
@@ -58,7 +62,12 @@ module Pipeline
     end
     
     def fetch_from_cache(type)
-      Rails.cache.read(cache_key(type))
+      begin
+        Rails.cache.read(cache_key(type))
+      rescue StandardError => e
+        Rails.logger.error("Error fetching from cache for type #{type} and channel #{@channel_id}: #{e.message}\n#{e.backtrace.join("\n")}")
+        nil
+      end
     end
     
     def cache_key(type)

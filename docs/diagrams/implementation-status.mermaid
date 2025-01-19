@@ -1,0 +1,58 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 60,
+    'rankSpacing': 80,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style Definitions
+    classDef complete fill:#388E3C,stroke:#388E3C,color:#fff,stroke-width:2px
+    classDef inProgress fill:#FFA000,stroke:#FFA000,color:#000,stroke-width:2px
+    classDef missing fill:#D32F2F,stroke:#D32F2F,color:#fff,stroke-width:2px
+    classDef planned fill:#7B1FA2,stroke:#7B1FA2,color:#fff,stroke-width:2px
+
+    %% Completed Components
+    FE_Base["✅ Basic React Setup<br/>Complete"]:::complete
+    BE_Base["✅ Rails API Setup<br/>Complete"]:::complete
+    DB_Base["✅ Database Schema<br/>Complete"]:::complete
+    Cache_Base["✅ Redis Integration<br/>Complete"]:::complete
+
+    %% In Progress Components
+    FE_Components["🔄 UI Components<br/>80% Complete"]:::inProgress
+    BE_Services["🔄 Service Layer<br/>60% Complete"]:::inProgress
+    Workers["🔄 Background Jobs<br/>40% Complete"]:::inProgress
+    Analytics["🔄 Analytics System<br/>30% Complete"]:::inProgress
+
+    %% Missing Components
+    Types["❌ TypeScript Types<br/>Not Started"]:::missing
+    Tests["❌ Test Coverage<br/>15% Complete"]:::missing
+    Docs["❌ Documentation<br/>10% Complete"]:::missing
+    Security["❌ Security Features<br/>20% Complete"]:::missing
+
+    %% Planned Components
+    ML["📋 ML Integration<br/>Planned"]:::planned
+    RealTime["📋 Real-time Updates<br/>Planned"]:::planned
+    Mobile["📋 Mobile Support<br/>Planned"]:::planned
+    Analytics2["📋 Advanced Analytics<br/>Planned"]:::planned
+
+    %% Component Relationships
+    FE_Base --> FE_Components
+    FE_Components --> Types
+    BE_Base --> BE_Services
+    BE_Services --> Workers
+    Workers --> Analytics
+    
+    %% Dependencies
+    Types -.-> Tests
+    BE_Services -.-> Docs
+    Workers -.-> Security
+    
+    %% Future Plans
+    Analytics --> ML
+    FE_Components --> RealTime
+    BE_Services --> Mobile
+    Analytics --> Analytics2

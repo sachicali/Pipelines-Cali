@@ -1,26 +1,18 @@
+require_relative '../../../app/models/concerns/cacheable'
+
+require 'active_support/concern'
+
 module Pipeline
   module Workers
     class BaseWorker
+      include ActiveSupport::Concern
       include Sidekiq::Worker
+      include ::Cacheable
+      include Loggable
 
       private
 
-      def cache_key(type, id)
-        "pipeline:#{type}:#{id}"
-      end
-
-      def store_in_cache(type, id, data)
-        Rails.cache.write(
-          cache_key(type, id),
-          data,
-          expires_in: Pipeline.configuration.cache_ttl
-        )
-      end
-
-      def fetch_from_cache(type, id)
-        Rails.cache.read(cache_key(type, id)) or
-          raise StorageError, "#{type.capitalize} data not found for ID: #{id}"
-      end
+      
 
       def log_start(operation, id)
         Pipeline.logger.info "Starting #{operation} for ID: #{id}"

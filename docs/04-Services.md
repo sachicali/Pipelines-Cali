@@ -1,162 +1,244 @@
 # Services Documentation
 
-## 1. Core Services
+## 1. Architecture Overview
 
-### 1.1 YouTube API Service
-- Location: `app/services/youtube_api_service.rb`
-- Responsibilities:
-  - Channel data retrieval
-  - Video analytics collection
-  - Subscription management
-  - Rate limit handling
-
-### 1.2 Analytics Processing Service
-- Location: `app/services/analytics_processing_service.rb`
-- Responsibilities:
-  - Data aggregation
-  - Trend analysis
-  - Report generation
-  - Anomaly detection
-
-### 1.3 Recommendation Service
-- Location: `app/services/recommendation_service.rb`
-- Responsibilities:
-  - Content analysis
-  - Recommendation generation
-  - Personalization
-  - Performance tracking
-
-### 1.4 Notification Service
-- Location: `app/services/notification_service.rb`
-- Responsibilities:
-  - Email notifications
-  - Push notifications
-  - Notification templates
-  - Delivery tracking
-
-### 1.5 Channel Service
-- `app/services/pipeline/channel_service.rb` - Main channel service
-- Responsibilities:
-  1. Channel data retrieval
-  2. Channel validation
-  3. Channel analysis coordination
-
-### 1.6 Cache Service
-- `lib/pipeline/services/cache_service.rb` - Caching service
-- Responsibilities:
-  - Data caching
-  - Cache invalidation
-  - Cache expiration
-
-### 1.7 Metrics Service
-- `lib/pipeline/services/metrics_service.rb` - Metrics service
-- Responsibilities:
-  - Metric collection
-  - Metric analysis
-  - Metric storage
-
-## 2. Service Patterns
-
-### 2.1 Service Initialization
-```ruby
-service = Pipeline::ChannelService.new(params)
+### 1.1 Service Structure
+```mermaid
+reference: service-architecture
 ```
 
-### 2.2 Service Execution
-```ruby
-result = service.call
+### 1.2 Service Interactions
+```mermaid
+reference: service-interactions
 ```
 
-### 2.3 Error Handling
+## 2. Core Services
+
+### 2.1 YouTube API Service
 ```ruby
-begin
-  service.call
-rescue Pipeline::Errors::ServiceError => e
-  # Handle error
+# app/services/youtube_api_service.rb
+module Services
+  class YouTubeApiService
+    include ServiceBase
+
+    def initialize(channel_id:)
+      @channel_id = channel_id
+    end
+
+    def call
+      with_error_handling do
+        fetch_channel_data
+        process_analytics
+        track_metrics
+      end
+    end
+
+    private
+
+    def fetch_channel_data
+      # Implementation
+    end
+  end
 end
 ```
 
-## 3. Service Configuration
-- Configured in `lib/pipeline/configuration.rb`
-- Environment-specific settings in `config/environments/`
-
-## 4. Memory Context
-
-### 4.1 Service Memory Structure
-The service memory is organized as follows:
-
-- **4.1.1 Service Root**
-  - Type: Service
-  - Description: Root node for all service-related memory
-  - Relations:
-    - Connected to: Main Project Memory
-    - Connected to: Service Type Memories
-
-- **4.1.2 Service Type Memories**
-  - Type: ServiceType
-  - Description: Memory nodes for each service type
-  - Observations:
-    - Stores service configurations
-    - Tracks service usage statistics
-    - Maintains service dependencies
-  - Relations:
-    - Connected to: Service Root
-    - Connected to: Service Instance Memories
-
-- **4.1.3 Service Instance Memories**
-  - Type: ServiceInstance
-  - Description: Memory nodes for individual service instances
-  - Observations:
-    - Stores instance parameters
-    - Tracks instance execution
-    - Maintains instance results
-  - Relations:
-    - Connected to: Service Type Memories
-    - Connected to: Cache Memories
-
-### 4.2 Memory Integration
-The service system integrates with the project memory through:
-
-1.  **4.2.1 Service Tracking**
-   - Each service execution is logged in memory with:
-     - Service type
-     - Start time
-     - End time
-     - Status
-     - Results
-
-2.  **4.2.2 Cache Management**
-   - Cache operations are stored in memory with:
-     - Cache key
-     - Operation type (read/write)
-     - Data size
-     - Timestamp
-
-3.  **4.2.3 Metrics Collection**
-   - Service metrics are tracked in memory with:
-     - Metric type
-     - Value
-     - Timestamp
-     - Context
-
-4.  **4.2.4 Error Tracking**
-   - Service errors are stored in memory with:
-     - Error type
-     - Stack trace
-     - Service context
-     - Timestamp
-
-### 4.3 Memory Access Patterns
-The service system accesses memory through:
-- Service execution tracking
-- Cache performance monitoring
-- Metrics collection and analysis
-- Error logging and analysis
-
-### 4.4 Example Memory Query
+### 2.2 Analytics Service
 ```ruby
-# Query service memory for channel service statistics
-channel_memory = Memory.query(
-  type: 'ServiceType',
-  name: 'ChannelService'
-)
+# app/services/analytics_processing_service.rb
+module Services
+  class AnalyticsProcessingService
+    include ServiceBase
+
+    def call
+      aggregate_data
+      analyze_trends
+      generate_report
+    end
+  end
+end
+```
+
+## 3. Support Services
+
+### 3.1 Cache Service
+```ruby
+# lib/pipeline/services/cache_service.rb
+module Pipeline
+  module Services
+    class CacheService
+      def fetch(key, expires_in: 1.hour)
+        Rails.cache.fetch(key, expires_in: expires_in) do
+          yield
+        end
+      end
+
+      def invalidate(key)
+        Rails.cache.delete(key)
+      end
+    end
+  end
+end
+```
+
+### 3.2 Metrics Service
+```ruby
+# lib/pipeline/services/metrics_service.rb
+module Pipeline
+  module Services
+    class MetricsService
+      def track(metric_name, value, tags = {})
+        StatsD.measure(metric_name, value, tags)
+      end
+    end
+  end
+end
+```
+
+## 4. Service Patterns
+
+### 4.1 Service Base
+```ruby
+# app/services/concerns/service_base.rb
+module ServiceBase
+  extend ActiveSupport::Concern
+
+  included do
+    include ErrorHandling
+    include Metrics
+    include Caching
+  end
+
+  def call
+    raise NotImplementedError
+  end
+
+  private
+
+  def with_error_handling
+    track_execution do
+      yield
+    rescue StandardError => e
+      handle_error(e)
+    end
+  end
+end
+```
+
+### 4.2 Error Handling
+```ruby
+# app/services/concerns/error_handling.rb
+module ErrorHandling
+  extend ActiveSupport::Concern
+
+  def handle_error(error)
+    ErrorTracking.capture(error)
+    raise ServiceError.new(error.message)
+  end
+end
+```
+
+## 5. Configuration
+
+### 5.1 Service Configuration
+```ruby
+# lib/pipeline/configuration.rb
+module Pipeline
+  class Configuration
+    config_accessor :youtube_api_key
+    config_accessor :cache_ttl
+    config_accessor :retry_attempts
+  end
+end
+```
+
+### 5.2 Environment Settings
+```ruby
+# config/environments/production.rb
+config.services.youtube_api_key = ENV['YOUTUBE_API_KEY']
+config.services.cache_ttl = 1.hour
+config.services.retry_attempts = 3
+```
+
+## 6. Error Handling
+
+### 6.1 Custom Errors
+```ruby
+module Pipeline
+  module Errors
+    class ServiceError < StandardError; end
+    class ValidationError < ServiceError; end
+    class ExternalApiError < ServiceError; end
+  end
+end
+```
+
+### 6.2 Error Recovery
+```ruby
+def with_retries
+  retries = 0
+  begin
+    yield
+  rescue ServiceError => e
+    retries += 1
+    retry if retries < config.retry_attempts
+    raise e
+  end
+end
+```
+
+## 7. Performance Monitoring
+
+### 7.1 Metrics Tracking
+```ruby
+def track_execution
+  start_time = Time.now
+  result = yield
+  duration = Time.now - start_time
+  
+  metrics.track("service.execution", duration)
+  result
+end
+```
+
+### 7.2 Cache Management
+```ruby
+def with_caching(key)
+  cache.fetch(key) do
+    metrics.track("cache.miss", 1)
+    yield
+  end
+end
+```
+
+## 8. Testing
+
+### 8.1 Service Specs
+```ruby
+RSpec.describe YouTubeApiService do
+  let(:service) { described_class.new(channel_id: "123") }
+
+  it "fetches channel data" do
+    VCR.use_cassette("youtube_channel") do
+      result = service.call
+      expect(result).to be_success
+    end
+  end
+end
+```
+
+### 8.2 Mock External Services
+```ruby
+RSpec.describe AnalyticsService do
+  before do
+    allow(YouTubeApiService).to receive(:new)
+      .and_return(double(call: analytics_data))
+  end
+end
+```
+
+## Notes
+- Services follow single responsibility principle
+- Use dependency injection for flexibility
+- Cache frequently accessed data
+- Monitor service performance
+- Handle errors gracefully

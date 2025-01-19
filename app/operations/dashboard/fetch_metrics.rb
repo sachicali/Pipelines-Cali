@@ -23,10 +23,17 @@ module Operations
         Result.new(success: true) do |result|
           result.metrics = fetch_metrics(channel_id)
         end
-      rescue StandardError => e
+      rescue Pipeline::Error => e
+        Rails.logger.error("Pipeline Error fetching metrics: #{e.message}\n#{e.backtrace.join("\n")}")
         Result.new(
           success: false,
           error: e.message
+        )
+      rescue StandardError => e
+        Rails.logger.error("Unexpected error fetching metrics: #{e.message}\n#{e.backtrace.join("\n")}")
+        Result.new(
+          success: false,
+          error: "Unexpected error fetching metrics"
         )
       end
 

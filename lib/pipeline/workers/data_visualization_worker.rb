@@ -1,20 +1,25 @@
 module Pipeline
   module Workers
     class DataVisualizationWorker < BaseWorker
-      sidekiq_options queue: :visualization, 
+      include Loggable
+      sidekiq_options queue: :visualization,
                       retry: 3,
                       dead: false,
                       backtrace: true
 
       def perform(channel_id)
         log_start('visualization', channel_id)
+        begin
+          analysis_data = fetch_from_cache('analysis', channel_id)
+          dashboard = generate_dashboard(analysis_data)
+          store_in_cache('dashboard', channel_id, dashboard)
+        rescue Pipeline::StorageError => e
+          log_error('visualization', channel_id, e)
+          raise
+        end
         
-        analysis_data = fetch_from_cache('analysis', channel_id)
-        dashboard = generate_dashboard(analysis_data)
-        
-        store_in_cache('dashboard', channel_id, dashboard)
         notify_completion(channel_id)
-      rescue => e
+      rescue StandardError => e
         log_error('visualization', channel_id, e)
         raise
       end

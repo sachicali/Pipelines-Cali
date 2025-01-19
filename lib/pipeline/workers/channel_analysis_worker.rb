@@ -1,7 +1,8 @@
 module Pipeline
   module Workers
     class ChannelAnalysisWorker < BaseWorker
-      sidekiq_options queue: :analysis, 
+      include Loggable
+      sidekiq_options queue: :analysis,
                       retry: 3,
                       dead: false,
                       backtrace: true
@@ -10,10 +11,15 @@ module Pipeline
         log_start('analysis', channel_id)
         
         analysis_results = analyze_channel(channel_id)
-        store_in_cache('analysis', channel_id, analysis_results)
+        begin
+          store_in_cache('analysis', channel_id, analysis_results)
+        rescue Pipeline::StorageError => e
+          log_error('analysis', channel_id, e)
+          raise
+        end
         
         schedule_follow_up_jobs(channel_id)
-      rescue => e
+      rescue StandardError => e
         log_error('analysis', channel_id, e)
         raise
       end

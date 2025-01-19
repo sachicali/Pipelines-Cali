@@ -13,24 +13,36 @@ interface Competitor {
 }
 
 const Recommendations: React.FC = () => {
-  const competitors: Competitor[] = [
-    {
-      name: 'Tech Innovators',
-      subscribers: 1500000,
-      outlierVideos: [
-        { title: 'AI Revolution', views: 2300000 },
-        { title: 'Quantum Computing', views: 1800000 }
-      ]
-    },
-    {
-      name: 'Code Masters',
-      subscribers: 850000,
-      outlierVideos: [
-        { title: 'React Advanced Patterns', views: 1100000 },
-        { title: 'Node.js Performance', views: 950000 }
-      ]
+  const [competitors, setCompetitors] = React.useState<Competitor[]>([]);
+
+  const fetchCompetitorData = async () => {
+    try {
+      const response = await fetch('/api/v1/channels/UC_test_channel/competitors');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCompetitors(data.competitors);
+    } catch (error) {
+      console.error('Failed to fetch competitor data:', error);
+      // set an error state here
+      // set an error state here
+      setCompetitors([]);
     }
-  ];
+  };
+
+  if (competitors.length === 0) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Competitor Analysis</h1>
+        <div className="text-red-500">Failed to load competitor data. Please try again later.</div>
+      </div>
+    );
+  }
+
+  React.useEffect(() => {
+    fetchCompetitorData();
+  }, []);
 
   return (
     <div className="p-6">

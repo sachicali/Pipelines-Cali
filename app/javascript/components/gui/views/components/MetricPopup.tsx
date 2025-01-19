@@ -42,19 +42,24 @@ const MetricPopup: React.FC<MetricPopupProps> = ({ position, metric }) => {
     }
   };
 
-  return (
-    <div
-      className="absolute z-50 p-4 bg-gray-800 border border-purple-900/50 rounded-lg shadow-lg"
-      style={{
-        left: position.x + 20,
-        top: position.y + 20,
-        minWidth: '300px'
-      }}
-    >
-      <h3 className="text-lg font-semibold mb-2">{metric.name} Analysis</h3>
-      {getAnalysis()}
-    </div>
-  );
-};
-
+  
+    try {
+      return (
+        <div
+          className="absolute z-50 p-4 bg-gray-800 border border-purple-900/50 rounded-lg shadow-lg"
+          style={{
+            left: position.x + 20,
+            top: position.y + 20,
+            minWidth: '300px'
+          }}
+        >
+          <h3 className="text-lg font-semibold mb-2">{metric.name} Analysis</h3>
+          {getAnalysis()}
+        </div>
+      );
+    } catch (error) {
+      console.error('Failed to render metric popup:', error);
+      return <div className="text-red-500">Failed to render metric popup.</div>;
+    }
+  };
 export default MetricPopup;

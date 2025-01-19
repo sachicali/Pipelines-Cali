@@ -1,18 +1,34 @@
 # API Documentation
 
-## 1. API Endpoints
+## 1. Architecture Overview
 
-### 1.1 API Version 1
+### 1.1 System Architecture
+```mermaid
+reference: api-architecture
+```
 
-#### 1.1.1 Controllers
-- `app/controllers/api/v1/` - Contains version 1 API controllers
-  - `analytics_controller.rb` - Handles YouTube analytics endpoints
-  - `channel_controller.rb` - Manages channel data endpoints
-  - `recommendations_controller.rb` - Provides recommendation endpoints
+The API is built on a layered architecture consisting of:
+- Controllers for request handling
+- Middleware for authentication and rate limiting
+- Services for business logic
+- Data layer for storage and caching
 
-#### 1.1.2 Routes
-API routes are defined in `config/routes.rb`:
+### 1.2 Request Flow
+```mermaid
+reference: api-request-flow
+```
+
+## 2. API Endpoints (v1)
+
+### 2.1 Controllers
+Located in `app/controllers/api/v1/`:
+- `analytics_controller.rb`: YouTube analytics endpoints
+- `channel_controller.rb`: Channel data management
+- `recommendations_controller.rb`: Content recommendations
+
+### 2.2 Routes
 ```ruby
+# config/routes.rb
 namespace :api do
   namespace :v1 do
     resources :analytics, only: [:index, :show]
@@ -22,45 +38,51 @@ namespace :api do
 end
 ```
 
-#### 1.1.3 Authentication
-Authentication is handled via API tokens:
-- Tokens are generated for each user
-- Required for all endpoints except public analytics
-- Configured in `config/initializers/api_authentication.rb`
+## 3. Authentication & Security
 
-#### 1.1.4 Error Handling
-API errors follow a standardized format:
-- 400 Bad Request - Invalid parameters
-- 401 Unauthorized - Missing/invalid token
-- 404 Not Found - Resource not found
-- 429 Too Many Requests - Rate limit exceeded
-- 500 Internal Server Error - Server-side error
+### 3.1 Authentication
+- Bearer token authentication
+- Tokens required for all non-public endpoints
+- Configuration: `config/initializers/api_authentication.rb`
 
-#### 1.1.5 Rate Limiting
-API rate limits are configured in `config/initializers/rate_limiting.rb`:
-- 100 requests/minute for authenticated users
-- 10 requests/minute for unauthenticated users
-- Redis-backed rate limiting
+### 3.2 Rate Limiting
+- Authenticated: 100 requests/minute
+- Unauthenticated: 10 requests/minute
+- Redis-backed implementation
+- Configuration: `config/initializers/rate_limiting.rb`
 
-#### 1.1.6 Example Requests
+## 4. Error Handling
+
+### 4.1 Error Codes
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable message",
+    "details": { }
+  }
+}
+```
+
+### 4.2 Standard Errors
+| Code | Description           | Cause                    |
+|------|--------------------- |--------------------------|
+| 400  | Bad Request          | Invalid parameters       |
+| 401  | Unauthorized         | Missing/invalid token    |
+| 404  | Not Found           | Resource doesn't exist   |
+| 429  | Too Many Requests    | Rate limit exceeded      |
+| 500  | Internal Server Error| Server-side failure      |
+
+## 5. Example Usage
+
+### 5.1 Channel Analytics
 ```bash
 # Get channel analytics
 curl -X GET http://localhost:3000/api/v1/analytics/123 \
   -H "Authorization: Bearer YOUR_API_TOKEN"
-
-# Create new channel
-curl -X POST http://localhost:3000/api/v1/channels \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_TOKEN" \
-  -d '{"channel_id":"UC1234567890"}'
-
-# Get recommendations
-curl -X GET http://localhost:3000/api/v1/recommendations \
-  -H "Authorization: Bearer YOUR_API_TOKEN"
 ```
 
-#### 1.1.7 Response Format
-All API responses follow the format:
+Response:
 ```json
 {
   "data": {
@@ -74,75 +96,60 @@ All API responses follow the format:
   "meta": {
     "request_id": "abc123",
     "timestamp": "2025-01-18T02:32:08Z"
-  },
-  "errors": []
+  }
 }
 ```
 
-## 2. Memory Context
+### 5.2 Create Channel
+```bash
+curl -X POST http://localhost:3000/api/v1/channels \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -d '{"channel_id":"UC1234567890"}'
+```
 
-### 2.1 API Memory Structure
-The API memory is organized as follows:
+### 5.3 Get Recommendations
+```bash
+curl -X GET http://localhost:3000/api/v1/recommendations \
+  -H "Authorization: Bearer YOUR_API_TOKEN"
+```
 
-- **2.1.1 API Root**
-  - Type: API
-  - Description: Root node for all API-related memory
-  - Relations:
-    - Connected to: Main Project Memory
-    - Connected to: Version 1 Memory
+## 6. Rate Limiting Headers
+```http
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+X-RateLimit-Reset: 1624291200
+```
 
-- **2.1.2 Version 1 Memory**
-  - Type: API Version
-  - Description: Memory node for API version 1
-  - Observations:
-    - Contains controllers, routes, and authentication details
-    - Stores rate limiting configurations
-    - Maintains error handling patterns
-  - Relations:
-    - Connected to: API Root
-    - Connected to: Endpoint Memories
+## 7. Development Setup
 
-### 2.2 Memory Integration
-The API system integrates with the project memory through:
+### 7.1 Prerequisites
+- Ruby 3.2+
+- Redis for rate limiting
+- PostgreSQL for data storage
 
-1.  **2.2.1 Request Logging**
-   - Each API request is logged in memory with:
-     - Timestamp
-     - Endpoint
-     - Parameters
-     - Response status
-
-2.  **2.2.2 Error Tracking**
-   - API errors are stored in memory with:
-     - Error type
-     - Stack trace
-     - Request context
-
-3.  **2.2.3 Rate Limiting**
-   - Rate limit usage is tracked in memory with:
-     - Client identifier
-     - Request count
-     - Time window
-
-4.  **2.2.4 Endpoint Documentation**
-   - API endpoint details are stored in memory with:
-     - Path
-     - HTTP method
-     - Parameters
-     - Response format
-     - Example requests
-
-### 2.3 Memory Access Patterns
-The API system accesses memory through:
-- Direct memory queries for rate limiting
-- Error logging to memory
-- Request tracking for analytics
-- Documentation retrieval for API explorer
-
-### 2.4 Example Memory Query
+### 7.2 Configuration
+1. Set up authentication:
 ```ruby
-# Query API memory for endpoint details
-endpoint_memory = Memory.query(
-  type: 'APIEndpoint',
-  path: '/api/v1/analytics'
-)
+# config/initializers/api_authentication.rb
+config.token_auth.enabled = true
+config.token_auth.header = 'Authorization'
+```
+
+2. Configure rate limiting:
+```ruby
+# config/initializers/rate_limiting.rb
+config.rate_limit.authenticated = 100
+config.rate_limit.unauthenticated = 10
+```
+
+## 8. Testing
+- Request specs in `spec/requests/api/v1/`
+- Controller specs in `spec/controllers/api/v1/`
+- Integration tests in `spec/integration/api/`
+
+## Notes
+- All timestamps are in ISO8601 format
+- Rate limits are per-client, based on IP and token
+- API versioning uses URL namespacing
+- Request IDs are included in all responses

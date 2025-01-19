@@ -1,0 +1,63 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 40,
+    'rankSpacing': 50,
+    'padding': 20
+  },
+  'theme': 'base'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef ruby fill:#701516,stroke:#701516,color:#fff,stroke-width:2px
+    classDef yml fill:#6d8086,stroke:#6d8086,color:#fff,stroke-width:1px
+    classDef js fill:#f1e05a,stroke:#887100,stroke-width:2px
+    classDef warn fill:#f44336,stroke:#d32f2f,color:#fff,stroke-width:2px
+
+    subgraph Config["config/"]
+        AppRB["application.rb"]:::ruby
+        BootRB["boot.rb"]:::ruby
+        EnvRB["environment.rb"]:::ruby
+        PumaRB["puma.rb"]:::ruby
+        RoutesRB["routes.rb"]:::ruby
+
+        subgraph Environments["environments/"]
+            DevRB["development.rb"]:::ruby
+            ProdRB["production.rb"]:::ruby
+            TestRB["test.rb"]:::ruby
+        end
+
+        subgraph Initializers["initializers/"]
+            AssetsRB["assets.rb"]:::ruby
+            CSPRB["content_security_policy.rb"]:::ruby
+            FilterRB["filter_parameter_logging.rb"]:::ruby
+            InflectionsRB["inflections.rb"]:::ruby
+            SidekiqRB["sidekiq.rb"]:::ruby
+        end
+
+        subgraph YMLFiles["YAML Configuration"]
+            CableYML["cable.yml"]:::yml
+            CacheYML["cache.yml"]:::yml
+            CredentialsYML["credentials.yml.enc"]:::yml
+            DatabaseYML["database.yml"]:::yml
+            DeployYML["deploy.yml"]:::yml
+            QueueYML["queue.yml"]:::yml
+            RecurringYML["recurring.yml"]:::yml
+            StorageYML["storage.yml"]:::yml
+        end
+
+        LocalesYML["locales/en.yml"]:::yml
+        ShadcnJS["shadcn.tailwind.js"]:::js
+    end
+
+    %% Warnings
+    MissingEnvConfig["❌ Missing Environment Config"]:::warn
+    MissingSecurityConfig["❌ Missing Security Configuration"]:::warn
+
+    %% Connections
+    Environments --> AppRB
+    Initializers --> AppRB
+    YMLFiles --> AppRB
+    MissingEnvConfig -.-> Environments
+    MissingSecurityConfig -.-> Initializers

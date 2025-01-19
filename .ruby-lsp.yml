@@ -9,8 +9,6 @@ formatter:
 diagnostics:
   rubocop:
     command: "bundle exec rubocop"
-    except: []
-    only: []
     format_on_save: true
 
 completion:
@@ -20,4 +18,4 @@ completion:
 
 hover:
   documentation: true
-  show_source: true 
+  show_source: true

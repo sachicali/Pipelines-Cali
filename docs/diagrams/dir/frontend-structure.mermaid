@@ -1,0 +1,53 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 50,
+    'rankSpacing': 70,
+    'padding': 20
+  },
+  'theme': 'base'
+} }%%
+
+graph TB
+    %% Style definitions
+    classDef page fill:#61DAFB,stroke:#61DAFB,color:#000,stroke-width:2px
+    classDef component fill:#764ABC,stroke:#764ABC,color:#fff,stroke-width:2px
+    classDef layout fill:#00BCD4,stroke:#00BCD4,color:#000,stroke-width:2px
+    classDef warning fill:#FF5252,stroke:#FF5252,color:#fff,stroke-width:2px
+
+    %% Pages
+    subgraph Pages[Page Components]
+        Dashboard[Dashboard.tsx]:::page
+        Landing[Landing.tsx]:::page
+        Analytics[Analytics.tsx]:::page
+        Notifications[Notifications.tsx]:::page
+    end
+
+    %% UI Components
+    subgraph Components[Shared Components]
+        direction TB
+        MetricsCard[MetricsCard.tsx]:::component
+        CompetitorCard[CompetitorCard.tsx]:::component
+        Chart[Chart.tsx]:::component
+        MetricPopup[MetricPopup.tsx]:::component
+        Header[Header.tsx]:::component
+        Navbar[Navbar.tsx]:::component
+    end
+
+    %% ShadCN Components
+    subgraph ShadCN[ShadcnUI Components]
+        Button[button.jsx]:::layout
+        Card[card.jsx]:::layout
+        Table[table.jsx]:::layout
+    end
+
+    %% Missing Components
+    MissingTypes[❌ Missing TypeScript Types<br/>- Component Props<br/>- API Responses<br/>- State Management]:::warning
+    MissingTests[❌ Missing Tests<br/>- Component Tests<br/>- Integration Tests]:::warning
+
+    %% Connections
+    Dashboard --> MetricsCard & CompetitorCard & Chart
+    Components --> ShadCN
+    Pages --> Components
+    MissingTypes -.-> Components
+    MissingTests -.-> Pages

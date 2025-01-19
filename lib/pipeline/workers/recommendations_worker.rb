@@ -1,20 +1,25 @@
 module Pipeline
   module Workers
     class RecommendationsWorker < BaseWorker
-      sidekiq_options queue: :recommendations, 
+      include Loggable
+      sidekiq_options queue: :recommendations,
                       retry: 3,
                       dead: false,
                       backtrace: true
 
       def perform(channel_id)
         log_start('recommendations', channel_id)
+        begin
+          analysis_data = fetch_from_cache('analysis', channel_id)
+          recommendations = generate_recommendations(analysis_data)
+          store_in_cache('recommendations', channel_id, recommendations)
+        rescue Pipeline::StorageError => e
+          log_error('recommendations', channel_id, e)
+          raise
+        end
         
-        analysis_data = fetch_from_cache('analysis', channel_id)
-        recommendations = generate_recommendations(analysis_data)
-        
-        store_in_cache('recommendations', channel_id, recommendations)
         notify_completion(channel_id)
-      rescue => e
+      rescue StandardError => e
         log_error('recommendations', channel_id, e)
         raise
       end

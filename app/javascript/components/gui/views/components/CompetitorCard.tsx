@@ -58,28 +58,33 @@ interface CompetitorCardProps {
   competitor: Competitor;
 }
 
-const CompetitorCard: React.FC<CompetitorCardProps> = ({ competitor }) => {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{competitor.name}</CardTitle>
-        <p className="text-sm text-purple-300/70">
-          Subscribers: {competitor.subscribers}
-        </p>
-      </CardHeader>
-      <CardContent>
-        <h3 className="text-lg font-semibold mb-2">Top Performing Videos:</h3>
-        <ul className="space-y-2">
-          {competitor.outlierVideos.map((video, index) => (
-            <li key={index} className="flex justify-between">
-              <span>{video.title}</span>
-              <span className="text-emerald-500">{video.views} views</span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
-  );
-};
 
+const CompetitorCard: React.FC<CompetitorCardProps> = ({ competitor }) => {
+  try {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{competitor.name}</CardTitle>
+          <p className="text-sm text-purple-300/70">
+            Subscribers: {competitor.subscribers}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <h3 className="text-lg font-semibold mb-2">Top Performing Videos:</h3>
+          <ul className="space-y-2">
+            {competitor.outlierVideos.map((video, index) => (
+              <li key={index} className="flex justify-between">
+                <span>{video.title}</span>
+                <span className="text-emerald-500">{video.views} views</span>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    );
+  } catch (error) {
+    console.error('Failed to render competitor card:', error);
+    return <div className="text-red-500">Failed to render competitor card.</div>;
+  }
+};
 export default CompetitorCard;

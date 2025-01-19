@@ -42,6 +42,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Workers documentation with correct worker class name
 - Updated Services documentation with correct service responsibilities
 
+### Fixed
+- Added error handling to all API calls in the main GUI pages
+- Added error handling to the Chart, CompetitorCard, Header, MetricPopup, Metrics, MetricsCard, and MetricsDisplay components
+- Added error handling to the main.tsx controller
+
+### Changed
+- Implemented robust error handling across the entire codebase, including controllers, models, services, and background jobs.
+- Updated documentation to reflect the new error handling mechanisms.
+- Updated CHANGELOG.md and README.md to reflect the new error handling mechanisms.
+
+### Added
+- Implemented spec coverage tests for all components and controllers
+- Added TypeScript types for all TypeScript files
+- Created API definitions and documentation for all API methods and calls
 
 ## [1.0.0] - 2025-01-18
 ### Added

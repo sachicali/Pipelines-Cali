@@ -65,65 +65,43 @@ interface Position {
 const Dashboard: React.FC = () => {
   const [hoveredMetric, setHoveredMetric] = useState<Metric | null>(null);
   const [mousePosition, setMousePosition] = useState<Position>({ x: 0, y: 0 });
+  const [metrics, setMetrics] = useState<Metric[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const metrics: Metric[] = [
-    {
-      name: 'Subscribers',
-      value: '1.2M',
-      trend: 0.12,
-      chartData: [
-        { day: 'Mon', value: 1200 },
-        { day: 'Tue', value: 1500 },
-        { day: 'Wed', value: 1800 },
-        { day: 'Thu', value: 2000 },
-        { day: 'Fri', value: 2200 },
-        { day: 'Sat', value: 2500 },
-        { day: 'Sun', value: 3000 }
-      ]
-    },
-    {
-      name: 'Views',
-      value: '15.8M',
-      trend: -0.05,
-      chartData: [
-        { day: 'Mon', value: 10000 },
-        { day: 'Tue', value: 12000 },
-        { day: 'Wed', value: 11000 },
-        { day: 'Thu', value: 9000 },
-        { day: 'Fri', value: 8000 },
-        { day: 'Sat', value: 7000 },
-        { day: 'Sun', value: 6000 }
-      ]
-    },
-    {
-      name: 'Watch Time',
-      value: '1.8M hours',
-      trend: 0.08,
-      chartData: [
-        { day: 'Mon', value: 100000 },
-        { day: 'Tue', value: 120000 },
-        { day: 'Wed', value: 130000 },
-        { day: 'Thu', value: 140000 },
-        { day: 'Fri', value: 150000 },
-        { day: 'Sat', value: 160000 },
-        { day: 'Sun', value: 170000 }
-      ]
-    },
-    {
-      name: 'Engagement',
-      value: '8.5%',
-      trend: -0.02,
-      chartData: [
-        { day: 'Mon', value: 7 },
-        { day: 'Tue', value: 8 },
-        { day: 'Wed', value: 9 },
-        { day: 'Thu', value: 7 },
-        { day: 'Fri', value: 6 },
-        { day: 'Sat', value: 5 },
-        { day: 'Sun', value: 4 }
-      ]
+  const fetchDashboardData = async () => {
+    try {
+      const response = await fetch('/api/v1/channels/UC_test_channel/dashboard');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      const metricsData = data.metrics.map((metric: any) => ({
+        name: metric.name,
+        value: metric.value,
+        trend: metric.trend,
+        chartData: metric.chartData
+      }))
+      setMetrics(metricsData);
+      setError(null);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+      setError('Failed to load dashboard data. Please try again later.');
     }
-  ];
+  };
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
+
+  React.useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const handleMouseEnter = (metric: Metric, e: React.MouseEvent) => {
     setHoveredMetric(metric);
@@ -133,6 +111,7 @@ const Dashboard: React.FC = () => {
   const handleMouseLeave = () => {
     setHoveredMetric(null);
   };
+
 
   return (
     <div className="p-6">

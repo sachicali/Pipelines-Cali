@@ -1,0 +1,107 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 40,
+    'rankSpacing': 50,
+    'padding': 20
+  },
+  'theme': 'base'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef ruby fill:#701516,stroke:#701516,color:#fff,stroke-width:2px
+    classDef js fill:#f1e05a,stroke:#887100,stroke-width:2px
+    classDef ts fill:#3178c6,stroke:#235a97,stroke-width:2px,color:#fff
+    classDef css fill:#563d7c,stroke:#563d7c,color:#fff,stroke-width:2px
+    classDef erb fill:#701516,stroke:#701516,color:#fff,stroke-width:1px
+    classDef warn fill:#f44336,stroke:#d32f2f,color:#fff,stroke-width:2px
+
+    subgraph AppRoot["app/"]
+        subgraph Assets["assets/"]
+            AppCSS["application.tailwind.css"]:::css
+            ShadcnCSS["shadcn.css"]:::css
+        end
+
+        subgraph Channels["channels/"]
+            PipelineChannel["pipeline_channel.rb"]:::ruby
+        end
+
+        subgraph Controllers["controllers/"]
+            subgraph API["api/v1/"]
+                BaseController["base_controller.rb"]:::ruby
+                ChannelsController["channels_controller.rb"]:::ruby
+            end
+            AppController["application_controller.rb"]:::ruby
+            DashController["dashboard_controller.rb"]:::ruby
+        end
+
+        subgraph Helpers["helpers/"]
+            AppHelper["application_helper.rb"]:::ruby
+        end
+
+        subgraph JavaScript["javascript/"]
+            AppTS["application.ts"]:::ts
+            AppTSX["application.tsx"]:::ts
+            
+            subgraph Components["components/gui/"]
+                subgraph JSControllers["controllers/"]
+                    App["App.tsx"]:::ts
+                    Main["main.tsx"]:::ts
+                end
+                
+                subgraph Views["views/"]
+                    subgraph UIComponents["components/"]
+                        Chart["Chart.tsx"]:::ts
+                        CompCard["CompetitorCard.tsx"]:::ts
+                        Header["Header.tsx"]:::ts
+                        MetricPopup["MetricPopup.tsx"]:::ts
+                        Metrics["Metrics.tsx"]:::ts
+                        MetricsCard["MetricsCard.tsx"]:::ts
+                        MetricsDisplay["MetricsDisplay.tsx"]:::ts
+                        Navbar["Navbar.tsx"]:::ts
+                        RecPopup["RecommendationPopup.tsx"]:::ts
+
+                        subgraph UI["ui/"]
+                            Button["button.jsx"]:::js
+                            Card["card.jsx"]:::js
+                            Table["table.jsx"]:::js
+                        end
+                    end
+
+                    subgraph Pages["pages/"]
+                        Dashboard["Dashboard.tsx"]:::ts
+                        Landing["Landing.tsx"]:::ts
+                        Notifs["Notifications.tsx"]:::ts
+                        Recs["Recommendations.tsx"]:::ts
+                    end
+                end
+            end
+
+            subgraph TSControllers["controllers/"]
+                AppController["application.ts"]:::ts
+                ChartController["chart_controller.ts"]:::ts
+                HelloController["hello_controller.ts"]:::ts
+                IndexTS["index.ts"]:::ts
+                MetricsController["metrics_controller.ts"]:::ts
+            end
+        end
+
+        subgraph Jobs["jobs/"]
+            AppJob["application_job.rb"]:::ruby
+            ChannelJob["channel_analysis_job.rb"]:::ruby
+        end
+    end
+
+    %% Warnings
+    MissingTypes["❌ Missing TypeScript Types"]:::warn
+    MissingControllers["❌ Missing Controller Registration"]:::warn
+    MissingTests["❌ Missing Component Tests"]:::warn
+
+    %% Connections
+    Jobs --> Controllers
+    Controllers --> JavaScript
+    JavaScript --> Components
+    MissingTypes -.-> Components
+    MissingControllers -.-> TSControllers
+    MissingTests -.-> UIComponents

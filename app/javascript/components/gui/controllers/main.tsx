@@ -5,8 +5,13 @@ import React from 'react'
     const rootElement = document.getElementById('root');
     if (!rootElement) throw new Error('Failed to find the root element');
     const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    )
+    try {
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      )
+    } catch (error) {
+      console.error('Failed to render the app:', error);
+      // render an error message to the user
+    }

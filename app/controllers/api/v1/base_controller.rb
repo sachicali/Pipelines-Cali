@@ -11,7 +11,8 @@ module Api
       def handle_error(error)
         render json: {
           error: 'Internal Server Error',
-          message: error.message
+          message: error.message,
+          backtrace: error.backtrace
         }, status: :internal_server_error
       end
       

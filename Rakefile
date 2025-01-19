@@ -11,4 +11,4 @@ task :environment do
   require_relative 'config/boot'
 end
 
-Dir.glob('lib/tasks/*.rake').each { |r| load r } 
+Dir.glob('lib/tasks/*.rake').each { |r| load r }

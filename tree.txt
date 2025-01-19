@@ -1,0 +1,230 @@
+.
+├── CHANGELOG.md
+├── Dockerfile
+├── Dockerfile.dev
+├── Gemfile
+├── Gemfile.lock
+├── Procfile.dev
+├── README.md
+├── Rakefile
+├── app
+│   ├── assets
+│   │   ├── builds
+│   │   │   └── application.css
+│   │   ├── images
+│   │   └── stylesheets
+│   │       ├── application.tailwind.css
+│   │       └── shadcn.css
+│   ├── channels
+│   │   └── pipeline_channel.rb
+│   ├── controllers
+│   │   ├── api
+│   │   │   └── v1
+│   │   │       ├── base_controller.rb
+│   │   │       └── channels_controller.rb
+│   │   ├── application_controller.rb
+│   │   ├── concerns
+│   │   └── dashboard_controller.rb
+│   ├── helpers
+│   │   └── application_helper.rb
+│   ├── javascript
+│   │   ├── application.ts
+│   │   ├── application.tsx
+│   │   ├── components
+│   │   │   └── gui
+│   │   │       ├── controllers
+│   │   │       │   ├── App.tsx
+│   │   │       │   └── main.tsx
+│   │   │       └── views
+│   │   │           ├── components
+│   │   │           │   ├── Chart.tsx
+│   │   │           │   ├── CompetitorCard.tsx
+│   │   │           │   ├── Header.tsx
+│   │   │           │   ├── MetricPopup.tsx
+│   │   │           │   ├── Metrics.tsx
+│   │   │           │   ├── MetricsCard.tsx
+│   │   │           │   ├── MetricsDisplay.tsx
+│   │   │           │   ├── Navbar.tsx
+│   │   │           │   ├── RecommendationPopup.tsx
+│   │   │           │   └── ui
+│   │   │           │       ├── button.jsx
+│   │   │           │       ├── card.jsx
+│   │   │           │       └── table.jsx
+│   │   │           ├── index.css
+│   │   │           └── pages
+│   │   │               ├── Dashboard.tsx
+│   │   │               ├── Landing.tsx
+│   │   │               ├── Notifications.tsx
+│   │   │               └── Recommendations.tsx
+│   │   └── controllers
+│   │       ├── application.ts
+│   │       ├── chart_controller.ts
+│   │       ├── hello_controller.ts
+│   │       ├── index.ts
+│   │       └── metrics_controller.ts
+│   ├── jobs
+│   │   ├── application_job.rb
+│   │   └── channel_analysis_job.rb
+│   ├── mailers
+│   │   └── application_mailer.rb
+│   ├── models
+│   │   ├── application_record.rb
+│   │   └── concerns
+│   │       └── youtube_channel_validator.rb
+│   ├── operations
+│   │   └── dashboard
+│   │       └── fetch_metrics.rb
+│   ├── services
+│   │   └── pipeline
+│   │       └── channel_service.rb
+│   └── views
+│       ├── dashboard
+│       │   ├── _chart.html.erb
+│       │   ├── _competitor_cards.html.erb
+│       │   ├── _metrics.html.erb
+│       │   ├── _metrics_display.html.erb
+│       │   ├── _navbar.html.erb
+│       │   ├── index.html.erb
+│       │   ├── react.html.erb
+│       │   └── view.rb
+│       ├── layouts
+│       │   ├── application.html.erb
+│       │   ├── mailer.html.erb
+│       │   └── mailer.text.erb
+│       └── pwa
+│           ├── manifest.json.erb
+│           └── service-worker.js
+├── bin
+│   ├── analyze_channel
+│   ├── brakeman
+│   ├── bundle
+│   ├── bundle.cmd
+│   ├── dev
+│   ├── docker-entrypoint
+│   ├── jobs
+│   ├── kamal
+│   ├── kamal.cmd
+│   ├── rails
+│   ├── rake
+│   ├── rubocop
+│   ├── setup
+│   ├── test_app
+│   └── thrust
+├── config
+│   ├── application.rb
+│   ├── boot.rb
+│   ├── cable.yml
+│   ├── cache.yml
+│   ├── credentials.yml.enc
+│   ├── database.yml
+│   ├── deploy.yml
+│   ├── environment.rb
+│   ├── environments
+│   │   ├── development.rb
+│   │   ├── production.rb
+│   │   └── test.rb
+│   ├── initializers
+│   │   ├── assets.rb
+│   │   ├── content_security_policy.rb
+│   │   ├── filter_parameter_logging.rb
+│   │   ├── inflections.rb
+│   │   └── sidekiq.rb
+│   ├── locales
+│   │   └── en.yml
+│   ├── puma.rb
+│   ├── queue.yml
+│   ├── recurring.yml
+│   ├── routes.rb
+│   ├── shadcn.tailwind.js
+│   └── storage.yml
+├── config.ru
+├── data
+│   ├── README.md
+│   ├── youtube_gaming_channels.csv
+│   └── youtube_gaming_channels.json
+├── db
+│   ├── cable_schema.rb
+│   ├── cache_schema.rb
+│   ├── queue_schema.rb
+│   ├── schema.rb
+│   └── seeds.rb
+├── docker-compose.yml
+├── docss/ (All documentations)
+├── esbuild.config.js
+├── lib
+│   ├── pipeline
+│   │   ├── configuration.rb
+│   │   ├── errors.rb
+│   │   ├── extensions
+│   │   │   └── array_extensions.rb
+│   │   ├── report.rb
+│   │   ├── services
+│   │   │   ├── cache_service.rb
+│   │   │   └── metrics_service.rb
+│   │   ├── templates
+│   │   │   ├── grid_view.erb
+│   │   │   ├── index.erb
+│   │   │   ├── report.html.erb
+│   │   │   └── results.erb
+│   │   ├── version.rb
+│   │   ├── web.rb
+│   │   ├── workers
+│   │   │   ├── base_worker.rb
+│   │   │   ├── channel_analysis_worker.rb
+│   │   │   ├── data_visualization_worker.rb
+│   │   │   ├── notification_worker.rb
+│   │   │   ├── recommendation_worker.rb
+│   │   │   ├── recommendations_worker.rb
+│   │   │   └── visualization_worker.rb
+│   │   ├── workers.rb
+│   │   ├── youtube_analytics.rb
+│   │   ├── youtube_channel_analyzer.rb
+│   │   ├── youtube_data_visualizer.rb
+│   │   └── youtube_recommendations_engine.rb
+│   ├── pipeline.rb
+│   └── tasks
+│       └── pipeline.rake
+├── log
+├── package.json
+├── public
+│   ├── 400.html
+│   ├── 404.html
+│   ├── 406-unsupported-browser.html
+│   ├── 422.html
+│   ├── 500.html
+│   ├── grid.html
+│   ├── icon.png
+│   ├── icon.svg
+│   ├── index.html
+│   └── robots.txt
+├── script
+├── spec
+│   ├── pipeline
+│   │   ├── channel_analyzer_spec.rb
+│   │   ├── services
+│   │   │   └── metrics_service_spec.rb
+│   │   └── youtube_analytics_spec.rb
+│   └── spec_helper.rb
+├── storage
+├── tailwind.config.js
+├── test
+│   ├── application_system_test_case.rb
+│   ├── controllers
+│   ├── fixtures
+│   │   └── files
+│   ├── helpers
+│   ├── integration
+│   ├── mailers
+│   ├── models
+│   ├── system
+│   └── test_helper.rb
+├── tmp
+│   ├── cache
+│   ├── local_secret.txt
+│   ├── miniprofiler
+│   ├── pids
+│   ├── restart.txt
+│   ├── sockets
+│   └── storage
+├── vendor
+└── yarn.lock

@@ -1,0 +1,40 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant M as Model
+    participant V as Validator
+    participant YT as YouTube API
+    participant DB as Database
+    participant E as Error Handler
+
+    %% Normal Validation Flow
+    M->>+V: Validate Attributes
+    V->>V: Check Required Fields
+    V->>V: Type Validation
+    
+    alt YouTube Channel
+        V->>+YT: Verify Channel
+        YT-->>-V: Channel Valid
+    end
+
+    alt Custom Validations
+        V->>V: Run Custom Rules
+        V->>DB: Check Uniqueness
+        DB-->>V: Unique Confirmed
+    end
+
+    V-->>-M: Validation Success
+
+    %% Error Flow
+    Note over M,E: Error Handling
+    M->>V: Invalid Data
+    V->>V: Validation Failed
+    V->>E: Collect Errors
+    E->>M: Return Error Messages
+
+    %% Callback Flow
+    Note over M,E: Callbacks
+    M->>M: before_validation
+    M->>M: after_validation
+    M->>M: before_save
+    M->>DB: Save Record
+    M->>M: after_save

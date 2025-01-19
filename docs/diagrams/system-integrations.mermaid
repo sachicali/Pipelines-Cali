@@ -1,0 +1,73 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 100,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style Definitions
+    classDef primary fill:#1976D2,stroke:#1976D2,color:#fff,stroke-width:2px
+    classDef secondary fill:#388E3C,stroke:#388E3C,color:#fff,stroke-width:2px
+    classDef storage fill:#E65100,stroke:#E65100,color:#fff,stroke-width:2px
+    classDef external fill:#6A1B9A,stroke:#6A1B9A,color:#fff,stroke-width:2px
+    classDef cache fill:#00ACC1,stroke:#00ACC1,color:#fff,stroke-width:2px
+
+    %% Main Components
+    Frontend["Frontend Layer<br/>React + TypeScript"]:::primary
+    API["API Layer<br/>Rails Controllers"]:::primary
+    Services["Service Layer<br/>Business Logic"]:::primary
+    Workers["Background Jobs<br/>Sidekiq"]:::primary
+
+    %% Storage Systems
+    DB[(PostgreSQL<br/>Primary Storage)]:::storage
+    Cache[(Redis<br/>Caching Layer)]:::cache
+    FileStore[(File Storage<br/>Assets & Uploads)]:::storage
+
+    %% External Services
+    YouTube["YouTube API<br/>External Service"]:::external
+    Analytics["Analytics Service<br/>Metrics Processing"]:::external
+
+    %% Integrations & Middleware
+    WebSockets{"WebSocket Server<br/>Real-time Updates"}:::secondary
+    Queue{"Job Queue<br/>Background Tasks"}:::secondary
+    Auth{"Authentication<br/>JWT & Sessions"}:::secondary
+
+    %% Frontend Integration Points
+    Frontend -->|"HTTP/REST"| API
+    Frontend -->|"Real-time"| WebSockets
+    Frontend -->|"Asset Requests"| FileStore
+
+    %% API Integrations
+    API --> Auth
+    API --> Services
+    API --> Cache
+    
+    %% Service Integrations
+    Services --> Workers
+    Services --> YouTube
+    Services --> Analytics
+    Services --> DB
+
+    %% Worker Integration Points
+    Workers --> Queue
+    Workers --> Cache
+    Workers --> DB
+    Workers --> FileStore
+
+    %% Real-time & Caching
+    WebSockets --> Cache
+    Queue --> Workers
+    
+    %% External Service Integration
+    YouTube --> Cache
+    Analytics --> DB
+
+    %% Cache Synchronization
+    DB <-.->|"Sync"| Cache
+    
+    %% File Storage Integration
+    FileStore <-.->|"Metadata"| DB

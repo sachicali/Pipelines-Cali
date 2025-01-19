@@ -51,7 +51,8 @@ Pipelines-Cali is a comprehensive YouTube analytics and recommendation platform 
 - [Testing Documentation](docs/07-Testing.md)
 - [TypeScript Documentation](docs/08-TypeScript.md)
 - [Redis Documentation](docs/09-Redis.md)
-
+- [Error Handling Documentation](docs/11-ErrorHandling.md)
+- [Implementation Details](docs/TO-DO/IMPLEMENTATION.md)
 ## Installation
 1. Clone the repository
 2. Install dependencies

@@ -1,0 +1,66 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef core fill:#1976D2,stroke:#1976D2,color:#fff,stroke-width:2px
+    classDef env fill:#388E3C,stroke:#388E3C,color:#fff,stroke-width:2px
+    classDef init fill:#6A1B9A,stroke:#6A1B9A,color:#fff,stroke-width:2px
+    classDef security fill:#D32F2F,stroke:#D32F2F,color:#fff,stroke-width:2px
+    classDef warning fill:#FFA000,stroke:#FFA000,color:#000,stroke-width:2px
+
+    %% Core Configuration
+    subgraph CoreConfig["Core Configuration"]
+        Application["application.rb"]:::core
+        Boot["boot.rb"]:::core
+        Environment["environment.rb"]:::core
+    end
+
+    %% Environment Configuration
+    subgraph Environments["Environments"]
+        Development["development.rb"]:::env
+        Production["production.rb"]:::env
+        Test["test.rb"]:::env
+    end
+
+    %% Initializers
+    subgraph Initializers["Initializers"]
+        ActiveRecord["active_record.rb"]:::init
+        RateLimiting["rate_limiting.rb"]:::init
+        Sidekiq["sidekiq.rb"]:::init
+        Assets["assets.rb"]:::init
+        DatabaseCleaner["database_cleaner.rb"]:::init
+    end
+
+    %% Security Configuration
+    subgraph Security["Security"]
+        Devise["devise.rb"]:::security
+        SecureHeaders["secure_headers.rb"]:::security
+        CSP["content_security_policy.rb"]:::security
+    end
+
+    %% Missing Components
+    MissingSSL["❌ Missing SSL Configuration"]:::warning
+    MissingAudit["❌ Missing Audit Logging"]:::warning
+
+    %% Relationships
+    Application --> Environments
+    Application --> Initializers
+    Environment --> Environments
+    Boot --> Environment
+    
+    Development --> Initializers
+    Production --> Initializers
+    Test --> Initializers
+    
+    Initializers --> Security
+
+    Security -.-> MissingSSL
+    Initializers -.-> MissingAudit

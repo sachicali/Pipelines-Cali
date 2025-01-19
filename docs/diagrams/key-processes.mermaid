@@ -1,0 +1,55 @@
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant U as User/Frontend
+    participant API as API Controller
+    participant S as Services
+    participant W as Workers
+    participant C as Cache
+    participant DB as Database
+    participant YT as YouTube API
+
+    %% Channel Analysis Process
+    U->>+API: Request Channel Analysis
+    API->>+S: Initiate Analysis
+    S->>YT: Fetch Channel Data
+    YT-->>S: Return Channel Data
+    S->>W: Queue Analysis Job
+    W->>C: Cache Initial Results
+    W->>DB: Store Basic Data
+    S-->>-API: Return Job Status
+    API-->>-U: Return Initial Response
+
+    %% Background Processing
+    W->>YT: Fetch Detailed Metrics
+    YT-->>W: Return Metrics
+    W->>DB: Store Full Analysis
+    W->>C: Update Cache
+    W->>U: Notify Completion (WebSocket)
+
+    %% Data Retrieval
+    U->>+API: Request Dashboard Data
+    API->>C: Check Cache
+    C-->>API: Return Cached Data
+    API->>+S: Get Fresh Data
+    S->>DB: Query Analysis
+    DB-->>S: Return Results
+    S-->>-API: Return Processed Data
+    API-->>-U: Return Dashboard Data
+
+    %% Real-time Updates
+    Note over U,YT: Real-time Metrics Flow
+    W->>YT: Poll for Updates
+    YT-->>W: Return Changes
+    W->>C: Update Cache
+    W->>U: Push Updates (WebSocket)
+
+    %% Error Handling
+    Note over U,DB: Error Handling Flow
+    U->>API: Invalid Request
+    API-->>U: Validation Error
+    U->>API: Valid Request
+    API->>S: Process Request
+    S->>DB: Failed Query
+    DB-->>S: Database Error
+    S-->>API: Error Response
+    API-->>U: Formatted Error

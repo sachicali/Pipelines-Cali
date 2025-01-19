@@ -1,0 +1,75 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 50,
+    'rankSpacing': 70,
+    'padding': 20
+  },
+  'theme': 'base'
+} }%%
+
+graph TB
+    %% Style definitions
+    classDef controller fill:#3C873A,stroke:#3C873A,color:#fff,stroke-width:2px
+    classDef model fill:#336791,stroke:#336791,color:#fff,stroke-width:2px
+    classDef service fill:#FF6B6B,stroke:#FF6B6B,color:#fff,stroke-width:2px
+    classDef worker fill:#673AB7,stroke:#673AB7,color:#fff,stroke-width:2px
+    classDef config fill:#607D8B,stroke:#607D8B,color:#fff,stroke-width:2px
+    classDef warning fill:#FF5252,stroke:#FF5252,color:#fff,stroke-width:2px
+    classDef test fill:#4CAF50,stroke:#4CAF50,color:#fff,stroke-width:2px
+
+    %% Controllers
+    subgraph Controllers[API Controllers]
+        BaseController[base_controller.rb]:::controller
+        ChannelsController[channels_controller.rb]:::controller
+        DashboardController[dashboard_controller.rb]:::controller
+    end
+
+    %% Models
+    subgraph Models[Data Models]
+        Channel[channel.rb]:::model
+        Video[video.rb]:::model
+        Analytics[analytics_report.rb]:::model
+    end
+
+    %% Services
+    subgraph Services[YouTube Services]
+        YTAnalytics[youtube_analytics.rb]:::service
+        YTChannel[youtube_channel_analyzer.rb]:::service
+        YTVisualizer[youtube_data_visualizer.rb]:::service
+    end
+
+    %% Workers
+    subgraph Workers[Background Jobs]
+        ChannelAnalysis[channel_analysis_worker.rb]:::worker
+        DataVisualization[data_visualization_worker.rb]:::worker
+        Notifications[notification_worker.rb]:::worker
+    end
+
+    %% Config
+    subgraph Config[Configuration]
+        Database[database.yml]:::config
+        Routes[routes.rb]:::config
+        Initializers[initializers/*.rb]:::config
+    end
+
+    %% Tests
+    subgraph Tests[Test Suite]
+        ModelSpecs[model_specs.rb]:::test
+        ControllerSpecs[controller_specs.rb]:::test
+        ServiceSpecs[service_specs.rb]:::test
+    end
+
+    %% Missing Components
+    MissingControllers[❌ Missing Controllers<br/>- Error Handlers<br/>- Auth Controllers]:::warning
+    MissingTests[❌ Incomplete Test Coverage<br/>- Integration Tests<br/>- Worker Tests]:::warning
+    MissingDocs[❌ Missing Documentation<br/>- API Docs<br/>- Service Docs]:::warning
+
+    %% Connections
+    Controllers --> Services
+    Services --> Models
+    Services --> Workers
+    Workers --> Models
+    MissingControllers -.-> Controllers
+    MissingTests -.-> Tests
+    MissingDocs -.-> Services

@@ -1,0 +1,47 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 120,
+    'rankSpacing': 120,
+    'padding': 20
+  },
+  'theme': 'base'
+} }%%
+
+graph TB
+    %% Style definitions
+    classDef framework fill:#4A154B,stroke:#4A154B,color:#fff,stroke-width:2px
+    classDef frontend fill:#61DAFB,stroke:#61DAFB,color:#000,stroke-width:2px
+    classDef backend fill:#3C873A,stroke:#3C873A,color:#fff,stroke-width:2px
+    classDef database fill:#336791,stroke:#336791,color:#fff,stroke-width:2px
+    classDef service fill:#FF6B6B,stroke:#FF6B6B,color:#fff,stroke-width:2px
+    classDef warn fill:#FFA726,stroke:#FB8C00,color:#000,stroke-width:3px,stroke-dasharray: 5 5
+
+    %% Frameworks and Main Tech
+    Rails[Ruby on Rails]:::framework
+    React[React + TypeScript]:::framework
+    Tailwind[Tailwind + ShadcnUI]:::framework
+    Redis[Redis Stack]:::framework
+    PostgreSQL[PostgreSQL]:::framework
+
+    %% Main Components
+    Frontend[Frontend Layer]:::frontend
+    Backend[Backend Services]:::backend
+    DB[(Data Storage)]:::database
+    Services[Service Layer]:::service
+
+    %% Warnings/Missing
+    Missing[❌ Missing Implementations<br/>- Controller Registration<br/>- Type Definitions<br/>- Test Coverage]:::warn
+
+    %% Connections
+    Rails --> Backend
+    React --> Frontend
+    Tailwind --> Frontend
+    Backend --> DB
+    Frontend --> Backend
+    Backend --> Services
+    Services --> DB
+    Redis -.- DB
+    PostgreSQL -.- DB
+    Missing -.- |Missing Types| Frontend
+    Missing -.- |Missing Tests| Backend

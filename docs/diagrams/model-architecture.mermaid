@@ -1,0 +1,74 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+classDiagram
+    %% Base Class
+    class ApplicationRecord {
+        +initialize()
+        #validate()
+        #before_save()
+        #after_save()
+    }
+
+    %% Core Models
+    class Channel {
+        +youtube_id: string
+        +title: string
+        +description: text
+        +subscriber_count: integer
+        +view_count: integer
+        +video_count: integer
+        +has_many videos
+        +has_many analytics_reports
+        +belongs_to user
+        +validate_youtube_channel()
+    }
+
+    class Video {
+        +youtube_id: string
+        +title: string
+        +description: text
+        +view_count: integer
+        +like_count: integer
+        +comment_count: integer
+        +belongs_to channel
+        +has_many analytics_reports
+    }
+
+    class AnalyticsReport {
+        +start_date: datetime
+        +end_date: datetime
+        +views: integer
+        +watch_time: integer
+        +subscribers_gained: integer
+        +subscribers_lost: integer
+        +belongs_to channel
+        +belongs_to video
+    }
+
+    class Recommendation {
+        +video_id: string
+        +score: float
+        +reason: string
+        +belongs_to channel
+        +belongs_to user
+    }
+
+    %% Inheritance
+    ApplicationRecord <|-- Channel
+    ApplicationRecord <|-- Video
+    ApplicationRecord <|-- AnalyticsReport
+    ApplicationRecord <|-- Recommendation
+
+    %% Relationships
+    Channel --> Video : has_many
+    Channel --> AnalyticsReport : has_many
+    Video --> AnalyticsReport : has_many
+    Channel --> Recommendation : has_many

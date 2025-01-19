@@ -21,7 +21,7 @@ module Pipeline
         recommendations: generate_recommendations
       }
     rescue => e
-      raise AnalysisError, "Analysis failed: #{e.message}"
+      raise Pipeline::AnalysisError, "Analysis failed: #{e.message}"
     end
 
     private

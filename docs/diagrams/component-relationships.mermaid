@@ -1,0 +1,76 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef frontend fill:#61DAFB,stroke:#61DAFB,color:#000,stroke-width:2px
+    classDef controller fill:#3C873A,stroke:#3C873A,color:#fff,stroke-width:2px
+    classDef service fill:#FF6B6B,stroke:#FF6B6B,color:#fff,stroke-width:2px
+    classDef model fill:#336791,stroke:#336791,color:#fff,stroke-width:2px
+    classDef worker fill:#673AB7,stroke:#673AB7,color:#fff,stroke-width:2px
+    classDef data fill:#E65100,stroke:#E65100,color:#fff,stroke-width:2px
+
+    %% Frontend Components
+    Dashboard["Dashboard.tsx<br/>(Primary UI)"]:::frontend
+    MetricsCard["MetricsCard.tsx<br/>(Data Display)"]:::frontend
+    CompetitorCard["CompetitorCard.tsx<br/>(Competition)"]:::frontend
+    Chart["Chart.tsx<br/>(Visualization)"]:::frontend
+
+    %% Backend Controllers
+    APIController["API::V1::BaseController<br/>(Request Handling)"]:::controller
+    ChannelsController["ChannelsController<br/>(Channel Management)"]:::controller
+    DashboardController["DashboardController<br/>(UI Data)"]:::controller
+
+    %% Services
+    YTService["YouTubeService<br/>(API Integration)"]:::service
+    AnalyticsService["AnalyticsService<br/>(Data Processing)"]:::service
+    RecommendationService["RecommendationService<br/>(AI/ML)"]:::service
+
+    %% Models
+    Channel["Channel<br/>(Data Model)"]:::model
+    Video["Video<br/>(Content Model)"]:::model
+    Analytics["AnalyticsReport<br/>(Metrics Model)"]:::model
+
+    %% Workers
+    AnalysisWorker["ChannelAnalysisWorker<br/>(Background)"]:::worker
+    VisualizationWorker["DataVisualizationWorker<br/>(Charts)"]:::worker
+
+    %% Data Stores
+    DB[(PostgreSQL<br/>Primary Data)]:::data
+    Cache[(Redis<br/>Cache Layer)]:::data
+
+    %% Frontend Relationships
+    Dashboard --> MetricsCard
+    Dashboard --> CompetitorCard
+    Dashboard --> Chart
+    MetricsCard --> |"API Calls"| APIController
+    CompetitorCard --> |"API Calls"| APIController
+    Chart --> |"API Calls"| APIController
+
+    %% Backend Relationships
+    APIController --> ChannelsController
+    APIController --> DashboardController
+    ChannelsController --> YTService
+    DashboardController --> AnalyticsService
+    DashboardController --> RecommendationService
+
+    %% Service Relationships
+    YTService --> Channel
+    AnalyticsService --> Analytics
+    RecommendationService --> Video
+    YTService --> AnalysisWorker
+    AnalyticsService --> VisualizationWorker
+
+    %% Data Relationships
+    Channel --> DB
+    Video --> DB
+    Analytics --> DB
+    AnalysisWorker --> Cache
+    VisualizationWorker --> Cache

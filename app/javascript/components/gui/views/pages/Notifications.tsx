@@ -50,11 +50,35 @@ interface Notification {
 }
 
 const Notifications: React.FC = () => {
-  const notifications: Notification[] = [
-    { title: 'New Subscriber', description: 'You gained a new subscriber: JohnDoe123' },
-    { title: 'Video Performance', description: 'Your video "React Tutorial" is trending' },
-    { title: 'Comment Mention', description: 'You were mentioned in a comment' }
-  ];
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
+
+  const fetchNotificationData = async () => {
+    try {
+      const response = await fetch('/api/v1/channels/UC_test_channel/notifications');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setNotifications(data.notifications);
+    } catch (error) {
+      console.error('Failed to fetch notification data:', error);
+      // set an error state here
+      setNotifications([]);
+    }
+  };
+
+  if (notifications.length === 0) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Notifications</h1>
+        <div className="text-red-500">Failed to load notifications. Please try again later.</div>
+      </div>
+    );
+  }
+
+  React.useEffect(() => {
+    fetchNotificationData();
+  }, []);
 
   return (
     <div className="p-6">

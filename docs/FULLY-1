@@ -1,0 +1,112 @@
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#e3f2fd',
+      'primaryTextColor': '#1565c0',
+      'secondaryColor': '#f3e5f5',
+      'tertiaryColor': '#fff3e0'
+    },
+    'flowchart': {
+      'curve': 'basis',
+      'nodeSpacing': 50,
+      'rankSpacing': 50
+    }
+  }
+}%%
+
+flowchart LR
+    %% Frontend Layer
+    subgraph Frontend["Frontend Layer"]
+        direction TB
+        
+        subgraph ReactCore["Core React"]
+            application_tsx[application.tsx]
+            react[react]
+            react_dom[react-dom/client]
+            react_router[react-router-dom]
+            react_icons[react-icons/fa]
+            recharts[recharts]
+        end
+
+        subgraph Pages["Page Components"]
+            Dashboard_tsx[Dashboard.tsx]
+            Landing_tsx[Landing.tsx]
+            Recommendations_tsx[Recommendations.tsx]
+            Notifications_tsx[Notifications.tsx]
+        end
+
+        subgraph Components["UI Components"]
+            MetricsCard_tsx[MetricsCard.tsx]
+            Metrics_tsx[Metrics.tsx]
+            MetricPopup_tsx[MetricPopup.tsx]
+            Header_tsx[Header.tsx]
+            CompetitorCard_tsx[CompetitorCard.tsx]
+        end
+
+        subgraph BaseUI["Base UI Components"]
+            button_jsx[button.jsx]
+            card_jsx[card.jsx]
+            table_jsx[table.jsx]
+        end
+
+        subgraph FrontendControllers["Frontend Controllers"]
+            App_tsx[App.tsx]
+            main_tsx[main.tsx]
+            application_ts[application.ts]
+            index_ts[index.ts]
+            hello_controller_ts[hello_controller.ts]
+            metrics_controller_ts[metrics_controller.ts]
+        end
+    end
+
+    %% Backend Layer
+    subgraph Backend["Backend Services"]
+        direction TB
+        
+        subgraph RubyCore["Core Ruby"]
+            ApplicationController_rb[ApplicationController.rb]
+            DashboardController_rb[DashboardController.rb]
+            ActionController_Base[ActionController::Base]
+        end
+
+        subgraph YouTubeServices["YouTube Services"]
+            YouTubeAnalytics_rb[YouTubeAnalytics.rb]
+            YouTubeChannelAnalyzer_rb[YouTubeChannelAnalyzer.rb]
+            YouTubeDataVisualizer_rb[YouTubeDataVisualizer.rb]
+            YouTubeRecommendationsEngine_rb[YouTubeRecommendationsEngine.rb]
+            google_apis[google-apis-youtube_v3]
+            gruff[gruff]
+        end
+
+        subgraph Assets["Asset Pipeline"]
+            application_tailwind_css[application.tailwind.css]
+            shadcn_css[shadcn.css]
+        end
+    end
+
+    %% Data Types
+    subgraph DataTypes["Data Types"]
+        Metric{Metric}
+        ChartDataPoint{ChartDataPoint}
+        Position{Position}
+        Competitor{Competitor}
+        OutlierVideo{OutlierVideo}
+        Notification{Notification}
+    end
+
+    %% Connections
+    application_tsx --> react & react_dom
+    App_tsx --> react_router
+    Components_tsx --> react_icons & recharts
+    YouTubeServices_rb --> google_apis
+    YouTubeChannelAnalyzer_rb --> YouTubeAnalytics_rb
+    YouTubeRecommendationsEngine_rb --> YouTubeChannelAnalyzer_rb
+    YouTubeDataVisualizer_rb --> gruff
+
+    %% Data Flow
+    MetricsCard_tsx -->|uses| Metric
+    Metrics_tsx -->|generates| ChartDataPoint
+    MetricPopup_tsx -->|references| Position & Metric
+    Recommendations_tsx -->|uses| Competitor & OutlierVideo
+    Notifications_tsx -->|manages| Notification

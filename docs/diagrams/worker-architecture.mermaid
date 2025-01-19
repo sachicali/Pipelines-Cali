@@ -1,0 +1,73 @@
+%%{init: {
+  'flowchart': {
+    'curve': 'basis',
+    'nodeSpacing': 80,
+    'rankSpacing': 100,
+    'padding': 20
+  },
+  'theme': 'neutral'
+}}%%
+
+graph TB
+    %% Style definitions
+    classDef worker fill:#673AB7,stroke:#673AB7,color:#fff,stroke-width:2px
+    classDef queue fill:#FF6B6B,stroke:#FF6B6B,color:#fff,stroke-width:2px
+    classDef job fill:#2196F3,stroke:#2196F3,color:#fff,stroke-width:2px
+    classDef storage fill:#E65100,stroke:#E65100,color:#fff,stroke-width:2px
+    classDef error fill:#D32F2F,stroke:#D32F2F,color:#fff,stroke-width:2px
+
+    %% Core Workers
+    subgraph Workers["Background Workers"]
+        BaseWorker["base_worker.rb"]:::worker
+        ChannelWorker["channel_analysis_worker.rb"]:::worker
+        DataVizWorker["data_visualization_worker.rb"]:::worker
+        NotifWorker["notification_worker.rb"]:::worker
+        RecoWorker["recommendations_worker.rb"]:::worker
+        VizWorker["visualization_worker.rb"]:::worker
+    end
+
+    %% Job Types
+    subgraph Jobs["Background Jobs"]
+        AnalyticsJob["AnalyticsJob"]:::job
+        ChannelJob["ChannelSyncJob"]:::job
+        RecoJob["RecommendationJob"]:::job
+        NotifJob["NotificationJob"]:::job
+    end
+
+    %% Queues
+    subgraph Queues["Job Queues"]
+        DefaultQ["default"]:::queue
+        AnalyticsQ["analytics"]:::queue
+        RecoQ["recommendations"]:::queue
+        NotifQ["notifications"]:::queue
+    end
+
+    %% Storage
+    subgraph Storage["Data Storage"]
+        Redis[(Redis)]:::storage
+        DB[(PostgreSQL)]:::storage
+    end
+
+    %% Error Handling
+    subgraph Errors["Error Handling"]
+        JobError["Job Failures"]:::error
+        RetryError["Retry Logic"]:::error
+        AlertError["Error Alerts"]:::error
+    end
+
+    %% Connections
+    Jobs --> Queues
+    Queues --> Workers
+    Workers --> Storage
+    Workers -.-> Errors
+    
+    BaseWorker --> ChannelWorker
+    BaseWorker --> DataVizWorker
+    BaseWorker --> NotifWorker
+    BaseWorker --> RecoWorker
+    BaseWorker --> VizWorker
+
+    AnalyticsJob --> AnalyticsQ
+    ChannelJob --> DefaultQ
+    RecoJob --> RecoQ
+    NotifJob --> NotifQ

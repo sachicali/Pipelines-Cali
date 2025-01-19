@@ -8,14 +8,18 @@ module Pipeline
       def track_analysis(channel_id, metrics)
         key = "metrics:analysis:#{channel_id}"
         current_time = Time.now.utc
-        
-        @cache.fetch(key, expires_in: 30.days) do
-          {
-            channel_id: channel_id,
-            timestamp: current_time,
-            metrics: metrics,
-            trends: calculate_trends(metrics)
-          }
+        begin
+          @cache.fetch(key, expires_in: 30.days) do
+            {
+              channel_id: channel_id,
+              timestamp: current_time,
+              metrics: metrics,
+              trends: calculate_trends(metrics)
+            }
+          end
+        rescue StandardError => e
+          Rails.logger.error("Error tracking analysis for channel #{channel_id}: #{e.message}\n#{e.backtrace.join("\n")}")
+          nil
         end
       end
       
